@@ -164,7 +164,7 @@ exception_mask_t FIRCLSMachExceptionMaskForSignal(int signal) {
 static void* FIRCLSMachExceptionServer(void* argument) {
   FIRCLSMachExceptionReadContext* context = argument;
 
-  pthread_setname_np("com.pendo.crashlytics.MachExceptionServer");
+  pthread_setname_np("com.pendo.crashreporter.MachExceptionServer");
 
   while (1) {
     union MachExceptionMessage message;

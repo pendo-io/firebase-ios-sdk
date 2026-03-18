@@ -66,7 +66,7 @@ static const double SEC_PER_MINUTE = 60;
   _operationQueue = [NSOperationQueue new];
   [_operationQueue setMaxConcurrentOperationCount:1];
   [_operationQueue setName:[sdkBundleID stringByAppendingString:@".on-demand-queue"]];
-  _dispatchQueue = dispatch_queue_create("com.pendo.crashlytics.on.demand", 0);
+  _dispatchQueue = dispatch_queue_create("com.pendo.crashreporter.on.demand", 0);
   _operationQueue.underlyingQueue = _dispatchQueue;
 
   _queuedOperationsCount = 0;
