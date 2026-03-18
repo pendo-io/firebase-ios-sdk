@@ -40,9 +40,9 @@
   return self;
 }
 
-- (FBLPromise *)setupContextWithReport:(FIRCLSInternalReport *)report
-                              settings:(FIRCLSSettings *)settings
-                           fileManager:(FIRCLSFileManager *)fileManager {
+- (void)setupContextWithReport:(FIRCLSInternalReport *)report
+                      settings:(FIRCLSSettings *)settings
+                   fileManager:(FIRCLSFileManager *)fileManager {
   _report = report;
   _settings = settings;
   _fileManager = fileManager;
@@ -50,7 +50,7 @@
   _hasInitializedContext = true;
 
   FIRCLSContextInitData *initDataObj = self.buildInitData;
-  return FIRCLSContextInitialize(initDataObj, self.fileManager);
+  FIRCLSContextInitialize(initDataObj, self.fileManager);
 }
 
 - (void)setAppQualitySessionId:(NSString *)appQualitySessionId {

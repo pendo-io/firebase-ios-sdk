@@ -17,32 +17,27 @@
 #import "Crashlytics/Crashlytics/Components/FIRCLSApplication.h"
 #import "Crashlytics/Crashlytics/Controllers/FIRCLSContextManager.h"
 #import "Crashlytics/Crashlytics/Models/FIRCLSExecutionIdentifierModel.h"
-#import "Crashlytics/Crashlytics/Models/FIRCLSInstallIdentifierModel.h"
 #import "Crashlytics/Crashlytics/Models/FIRCLSSettings.h"
 #import "Crashlytics/Crashlytics/Private/FIRCLSOnDemandModel_Private.h"
-#import "Crashlytics/Crashlytics/Settings/Models/FIRCLSApplicationIdentifierModel.h"
 
 @implementation FIRCLSManagerData
 
-- (instancetype)initWithGoogleAppID:(NSString *)googleAppID
-                        fileManager:(FIRCLSFileManager *)fileManager
-                        dataArbiter:(FIRCLSDataCollectionArbiter *)dataArbiter
-                           settings:(FIRCLSSettings *)settings
-                      onDemandModel:(FIRCLSOnDemandModel *)onDemandModel {
+- (instancetype)initWithDeviceID:(NSString *)deviceID
+                     fileManager:(FIRCLSFileManager *)fileManager
+                        settings:(FIRCLSSettings *)settings
+                   onDemandModel:(FIRCLSOnDemandModel *)onDemandModel {
   self = [super init];
   if (!self) {
     return nil;
   }
 
-  _googleAppID = googleAppID;
+  _deviceID = deviceID;
   _fileManager = fileManager;
-  _dataArbiter = dataArbiter;
   _settings = settings;
   _onDemandModel = onDemandModel;
   _contextManager = [[FIRCLSContextManager alloc] init];
 
-  _appIDModel = [[FIRCLSApplicationIdentifierModel alloc] init];
-  _installIDModel = [[FIRCLSInstallIdentifierModel alloc] init];
+  _installID = deviceID;
   _executionIDModel = [[FIRCLSExecutionIdentifierModel alloc] init];
 
   NSString *sdkBundleID = FIRCLSApplicationGetSDKBundleID();

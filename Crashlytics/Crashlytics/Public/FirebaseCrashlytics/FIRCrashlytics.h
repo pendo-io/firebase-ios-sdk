@@ -46,7 +46,7 @@ NS_SWIFT_NAME(Crashlytics)
  * @param googleAppID The Google App ID.
  * @return The singleton Crashlytics instance.
  */
-+ (instancetype)startWithGoogleAppID:(NSString *)googleAppID NS_SWIFT_NAME(start(googleAppID:));
++ (instancetype)startWithDeviceID:(NSString *)deviceID NS_SWIFT_NAME(start(deviceID:));
 
 /**
  * Accesses the singleton Crashlytics instance.

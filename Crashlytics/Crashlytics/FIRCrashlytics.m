@@ -14,26 +14,18 @@
 
 #include <stdatomic.h>
 
-#if __has_include(<FBLPromises/FBLPromises.h>)
-#import <FBLPromises/FBLPromises.h>
-#else
-#import "FBLPromises.h"
-#endif
 
 #include "Crashlytics/Crashlytics/Components/FIRCLSCrashedMarkerFile.h"
 #include "Crashlytics/Crashlytics/Components/FIRCLSGlobals.h"
 #import "Crashlytics/Crashlytics/Components/FIRCLSHost.h"
 #include "Crashlytics/Crashlytics/Components/FIRCLSUserLogging.h"
-#import "Crashlytics/Crashlytics/DataCollection/FIRCLSDataCollectionArbiter.h"
 #import "Crashlytics/Crashlytics/DataCollection/FIRCLSDataCollectionToken.h"
-#import "Crashlytics/Crashlytics/FIRCLSUserDefaults/FIRCLSUserDefaults.h"
 #include "Crashlytics/Crashlytics/Handlers/FIRCLSException.h"
 #import "Crashlytics/Crashlytics/Helpers/FIRCLSDefines.h"
 #include "Crashlytics/Crashlytics/Helpers/FIRCLSUtility.h"
 #import "Crashlytics/Crashlytics/Models/FIRCLSExecutionIdentifierModel.h"
 #import "Crashlytics/Crashlytics/Models/FIRCLSFileManager.h"
 #import "Crashlytics/Crashlytics/Models/FIRCLSSettings.h"
-#import "Crashlytics/Crashlytics/Settings/Models/FIRCLSApplicationIdentifierModel.h"
 
 #import "Crashlytics/Crashlytics/Helpers/FIRCLSLogger.h"
 #import "Crashlytics/Shared/FIRCLSByteUtility.h"
@@ -78,8 +70,7 @@ static atomic_bool _hasInitializedInstance;
 @interface FIRCrashlytics ()
 
 @property(nonatomic) BOOL didPreviouslyCrash;
-@property(nonatomic, copy) NSString *googleAppID;
-@property(nonatomic) FIRCLSDataCollectionArbiter *dataArbiter;
+@property(nonatomic, copy) NSString *deviceID;
 @property(nonatomic) FIRCLSFileManager *fileManager;
 
 @property(nonatomic) FIRCLSReportManager *reportManager;
@@ -91,7 +82,7 @@ static atomic_bool _hasInitializedInstance;
 // Dependencies common to each of the Controllers
 @property(nonatomic, strong) FIRCLSManagerData *managerData;
 
-@property(nonatomic, nullable) FBLPromise *contextInitPromise;
+@property(nonatomic) BOOL isContextInitialized;
 
 @end
 
@@ -101,8 +92,7 @@ static FIRCrashlytics *sharedInstance = nil;
 
 #pragma mark - Singleton Support
 
-- (instancetype)initWithGoogleAppID:(NSString *)googleAppID
-                            appInfo:(NSDictionary *)appInfo {
+- (instancetype)initWithDeviceID:(NSString *)deviceID {
   self = [super init];
 
   if (self) {
@@ -118,19 +108,14 @@ static FIRCrashlytics *sharedInstance = nil;
                        FIRCLSHostOSDisplayVersion(), FIRCLSHostOSBuildVersion());
 
     _fileManager = [[FIRCLSFileManager alloc] init];
-    _googleAppID = [googleAppID copy];
-    _dataArbiter = [[FIRCLSDataCollectionArbiter alloc] initWithAppInfo:appInfo];
+    _deviceID = [deviceID copy];
 
-    FIRCLSApplicationIdentifierModel *appModel = [[FIRCLSApplicationIdentifierModel alloc] init];
-    FIRCLSSettings *settings = [[FIRCLSSettings alloc] initWithFileManager:_fileManager
-                                                                appIDModel:appModel
-                                                                   appInfo:appInfo];
+    FIRCLSSettings *settings = [[FIRCLSSettings alloc] init];
 
     FIRCLSOnDemandModel *onDemandModel =
         [[FIRCLSOnDemandModel alloc] initWithFIRCLSSettings:settings fileManager:_fileManager];
-    _managerData = [[FIRCLSManagerData alloc] initWithGoogleAppID:_googleAppID
+    _managerData = [[FIRCLSManagerData alloc] initWithDeviceID:_deviceID
                                                       fileManager:_fileManager
-                                                      dataArbiter:_dataArbiter
                                                          settings:settings
                                                     onDemandModel:onDemandModel];
 
@@ -155,41 +140,35 @@ static FIRCrashlytics *sharedInstance = nil;
       });
     }
 
-    _contextInitPromise =
-        [[[_reportManager startWithProfiling] then:^id _Nullable(NSNumber *_Nullable value) {
-          if (![value boolValue]) {
-            FIRCLSErrorLog(@"Crash reporting could not be initialized");
-          }
-          return value;
-        }] catch:^void(NSError *error) {
-          FIRCLSErrorLog(@"Crash reporting failed to initialize with error: %@", error);
-        }];
+    _isContextInitialized = [_reportManager startWithProfiling];
+    if (!_isContextInitialized) {
+      FIRCLSErrorLog(@"Crash reporting could not be initialized");
+    }
   }
   return self;
 }
 
-+ (instancetype)startWithGoogleAppID:(NSString *)googleAppID {
++ (instancetype)startWithDeviceID:(NSString *)deviceID {
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-    sharedInstance = [[FIRCrashlytics alloc] initWithGoogleAppID:googleAppID
-                                                         appInfo:NSBundle.mainBundle.infoDictionary];
+    sharedInstance = [[FIRCrashlytics alloc] initWithDeviceID:deviceID];
   });
   return sharedInstance;
 }
 
 + (instancetype)crashlytics {
   if (!sharedInstance) {
-    FIRCLSErrorLog(@"[FIRCrashlytics startWithGoogleAppID:] must be called first.");
+    FIRCLSErrorLog(@"[FIRCrashlytics startWithDeviceID:] must be called first.");
   }
   return sharedInstance;
 }
 
 - (void)setCrashlyticsCollectionEnabled:(BOOL)enabled {
-  [self.dataArbiter setCrashlyticsCollectionEnabled:enabled];
+  // Ignored in standalone Crashlytics
 }
 
 - (BOOL)isCrashlyticsCollectionEnabled {
-  return [self.dataArbiter isCrashlyticsCollectionEnabled];
+  return YES;
 }
 
 #pragma mark - API: didCrashDuringPreviousExecution
@@ -234,20 +213,14 @@ static FIRCrashlytics *sharedInstance = nil;
 #pragma mark - API: Accessors
 
 - (void)checkForUnsentReportsWithCompletion:(void (^)(BOOL))completion {
-  [[self.reportManager checkForUnsentReports]
-      then:^id _Nullable(FIRCrashlyticsReport *_Nullable value) {
-        completion(value ? true : false);
-        return nil;
-      }];
+  FIRCrashlyticsReport *report = [self.reportManager checkForUnsentReports];
+  completion(report ? YES : NO);
 }
 
 - (void)checkAndUpdateUnsentReportsWithCompletion:
     (void (^)(FIRCrashlyticsReport *_Nonnull))completion {
-  [[self.reportManager checkForUnsentReports]
-      then:^id _Nullable(FIRCrashlyticsReport *_Nullable value) {
-        completion(value);
-        return nil;
-      }];
+  FIRCrashlyticsReport *report = [self.reportManager checkForUnsentReports];
+  completion(report);
 }
 
 - (void)sendUnsentReports {
@@ -346,21 +319,17 @@ static FIRCrashlytics *sharedInstance = nil;
                   callback:^{
                     [self.managerData.onDemandModel
                         recordOnDemandExceptionIfQuota:exceptionModel
-                             withDataCollectionEnabled:[self.dataArbiter
-                                                               isCrashlyticsCollectionEnabled]
+                             withDataCollectionEnabled:YES
                             usingExistingReportManager:self.existingReportManager];
                   }];
 }
 
 #pragma mark - Private Helpers
 - (void)waitForContextInit:(NSString *)contextLog callback:(void (^)(void))callback {
-  if (!_contextInitPromise) {
+  if (!_isContextInitialized) {
     FIRCLSErrorLog(@"Crashlytics method called before SDK was initialized: %@", contextLog);
     return;
   }
-  [_contextInitPromise then:^id _Nullable(id _Nullable value) {
-    callback();
-    return nil;
-  }];
+  callback();
 }
 @end

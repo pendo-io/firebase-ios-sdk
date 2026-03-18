@@ -28,7 +28,6 @@ Pod::Spec.new do |s|
 
   s.source_files = [
     'Crashlytics/Crashlytics/**/*.{c,h,m,mm,swift}',
-    'Crashlytics/Protogen/**/*.{c,h,m,mm}',
     'Crashlytics/Shared/**/*.{c,h,m,mm}',
     'Crashlytics/third_party/**/*.{c,h,m,mm}',
   ]
@@ -56,9 +55,6 @@ Pod::Spec.new do |s|
     cp -f ./Crashlytics/CrashlyticsInputFiles.xcfilelist ./CrashlyticsInputFiles.xcfilelist
   PREPARE_COMMAND_END
 
-  s.dependency 'PromisesObjC', '~> 2.4'
-  s.dependency 'nanopb', '~> 3.30910.0'
-
   s.libraries = 'c++', 'z'
   s.ios.frameworks = 'Security', 'SystemConfiguration'
   s.macos.frameworks = 'Security', 'SystemConfiguration'
@@ -67,33 +63,25 @@ Pod::Spec.new do |s|
 
   s.ios.pod_target_xcconfig = {
     'GCC_PREPROCESSOR_DEFINITIONS' =>
-      'CLS_SDK_NAME="Crashlytics iOS SDK" ' +
-      # For nanopb:
-      'PB_FIELD_32BIT=1 PB_NO_PACKED_STRUCTS=1 PB_ENABLE_MALLOC=1',
+      'CLS_SDK_NAME="Crashlytics iOS SDK"',
     'HEADER_SEARCH_PATHS' => '"${PODS_TARGET_SRCROOT}"',
   }
 
   s.osx.pod_target_xcconfig = {
     'GCC_PREPROCESSOR_DEFINITIONS' =>
-      'CLS_SDK_NAME="Crashlytics Mac SDK" ' +
-      # For nanopb:
-      'PB_FIELD_32BIT=1 PB_NO_PACKED_STRUCTS=1 PB_ENABLE_MALLOC=1',
+      'CLS_SDK_NAME="Crashlytics Mac SDK"',
     'HEADER_SEARCH_PATHS' => '"${PODS_TARGET_SRCROOT}"',
   }
 
   s.tvos.pod_target_xcconfig = {
     'GCC_PREPROCESSOR_DEFINITIONS' =>
-      'CLS_SDK_NAME="Crashlytics tvOS SDK" ' +
-      # For nanopb:
-      'PB_FIELD_32BIT=1 PB_NO_PACKED_STRUCTS=1 PB_ENABLE_MALLOC=1',
+      'CLS_SDK_NAME="Crashlytics tvOS SDK"',
     'HEADER_SEARCH_PATHS' => '"${PODS_TARGET_SRCROOT}"',
   }
 
   s.watchos.pod_target_xcconfig = {
     'GCC_PREPROCESSOR_DEFINITIONS' =>
-      'CLS_SDK_NAME="Crashlytics watchOS SDK" ' +
-      # For nanopb:
-      'PB_FIELD_32BIT=1 PB_NO_PACKED_STRUCTS=1 PB_ENABLE_MALLOC=1',
+      'CLS_SDK_NAME="Crashlytics watchOS SDK"',
     'OTHER_LD_FLAGS' => '$(inherited) -sectcreate __TEXT __info_plist',
     'HEADER_SEARCH_PATHS' => '"${PODS_TARGET_SRCROOT}"',
   }

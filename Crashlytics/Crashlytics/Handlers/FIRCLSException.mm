@@ -42,23 +42,8 @@
 #include <string>
 #include <typeinfo>
 
-#if !TARGET_OS_IPHONE
-#import <AppKit/NSApplication.h>
-#import <objc/runtime.h>
-#endif
-
 #pragma mark Prototypes
 static void FIRCLSTerminateHandler(void);
-#if !TARGET_OS_IPHONE
-void FIRCLSNSApplicationReportException(id self, SEL cmd, NSException *exception);
-
-typedef void (*NSApplicationReportExceptionFunction)(id, SEL, NSException *);
-
-static BOOL FIRCLSIsNSApplicationCrashOnExceptionsEnabled(void);
-static NSApplicationReportExceptionFunction FIRCLSOriginalNSExceptionReportExceptionFunction(void);
-static Method FIRCLSGetNSApplicationReportExceptionMethod(void);
-
-#endif
 
 #pragma mark - API
 void FIRCLSExceptionInitialize(FIRCLSExceptionReadOnlyContext *roContext,
@@ -68,16 +53,6 @@ void FIRCLSExceptionInitialize(FIRCLSExceptionReadOnlyContext *roContext,
   }
 
   roContext->originalTerminateHandler = std::set_terminate(FIRCLSTerminateHandler);
-
-#if !TARGET_OS_IPHONE
-  // If FIRCLSApplicationSharedInstance is null, we don't need this
-  if (FIRCLSIsNSApplicationCrashOnExceptionsEnabled() && FIRCLSApplicationSharedInstance()) {
-    Method m = FIRCLSGetNSApplicationReportExceptionMethod();
-
-    roContext->originalNSApplicationReportException =
-        (void *)method_setImplementation(m, (IMP)FIRCLSNSApplicationReportException);
-  }
-#endif
 
   rwContext->customExceptionCount = 0;
 }
@@ -471,17 +446,6 @@ static void FIRCLSTerminateHandler(void) {
 }
 
 void FIRCLSExceptionCheckHandlers(void *delegate) {
-#if !TARGET_OS_IPHONE
-  // Check this on OS X all the time, even if the debugger is attached. This is a common
-  // source of errors, so we want to be extra verbose in this case.
-  if (FIRCLSApplicationSharedInstance()) {
-    if (!FIRCLSIsNSApplicationCrashOnExceptionsEnabled()) {
-      FIRCLSWarningLog(@"Warning: NSApplicationCrashOnExceptions is not set. This will "
-                       @"result in poor top-level uncaught exception reporting.");
-    }
-  }
-#endif
-
   if (_firclsContext.readonly->debuggerAttached) {
     return;
   }
@@ -502,40 +466,5 @@ void FIRCLSExceptionCheckHandlers(void *delegate) {
       FIRCLSWarningLog(@"Warning: NSUncaughtExceptionHandler is '%s' in '%s'", name, lib);
     });
   }
-#else
-  if (FIRCLSApplicationSharedInstance() && FIRCLSIsNSApplicationCrashOnExceptionsEnabled()) {
-    // In this case, we *might* be able to intercept exceptions. But, verify we've still
-    // swizzled the method.
-    Method m = FIRCLSGetNSApplicationReportExceptionMethod();
-
-    if (method_getImplementation(m) != (IMP)FIRCLSNSApplicationReportException) {
-      FIRCLSWarningLog(
-          @"Warning: top-level NSApplication-reported exceptions cannot be intercepted");
-    }
-  }
 #endif
 }
-
-#pragma mark - AppKit Handling
-#if !TARGET_OS_IPHONE
-static BOOL FIRCLSIsNSApplicationCrashOnExceptionsEnabled(void) {
-  return [[NSUserDefaults standardUserDefaults] boolForKey:@"NSApplicationCrashOnExceptions"];
-}
-
-static Method FIRCLSGetNSApplicationReportExceptionMethod(void) {
-  return class_getInstanceMethod(NSClassFromString(@"NSApplication"), @selector(reportException:));
-}
-
-static NSApplicationReportExceptionFunction FIRCLSOriginalNSExceptionReportExceptionFunction(void) {
-  return (NSApplicationReportExceptionFunction)
-      _firclsContext.readonly->exception.originalNSApplicationReportException;
-}
-
-void FIRCLSNSApplicationReportException(id self, SEL cmd, NSException *exception) {
-  FIRCLSExceptionRecordNSException(exception);
-
-  // Call the original implementation
-  FIRCLSOriginalNSExceptionReportExceptionFunction()(self, cmd, exception);
-}
-
-#endif

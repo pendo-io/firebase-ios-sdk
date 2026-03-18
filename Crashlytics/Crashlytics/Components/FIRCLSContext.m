@@ -20,7 +20,6 @@
 #import "Crashlytics/Shared/FIRCLSConstants.h"
 
 #import "Crashlytics/Crashlytics/Models/FIRCLSFileManager.h"
-#import "Crashlytics/Crashlytics/Models/FIRCLSInstallIdentifierModel.h"
 #import "Crashlytics/Crashlytics/Models/FIRCLSInternalReport.h"
 #import "Crashlytics/Crashlytics/Models/FIRCLSSettings.h"
 
@@ -75,10 +74,10 @@ FIRCLSContextInitData* FIRCLSContextBuildInitData(FIRCLSInternalReport* report,
   return initData;
 }
 
-FBLPromise* FIRCLSContextInitialize(FIRCLSContextInitData* initData,
-                                    FIRCLSFileManager* fileManager) {
+void FIRCLSContextInitialize(FIRCLSContextInitData* initData,
+                             FIRCLSFileManager* fileManager) {
   if (!initData) {
-    return false;
+    return;
   }
 
   FIRCLSContextBaseInit();
@@ -87,7 +86,7 @@ FBLPromise* FIRCLSContextInitialize(FIRCLSContextInitData* initData,
   dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
 
   if (!FIRCLSIsValidPointer(initData.rootPath)) {
-    return false;
+    return;
   }
 
   NSString* rootPath = initData.rootPath;
@@ -101,8 +100,6 @@ FBLPromise* FIRCLSContextInitialize(FIRCLSContextInitData* initData,
 
   // some values that aren't tied to particular subsystem
   _firclsContext.readonly->debuggerAttached = FIRCLSProcessDebuggerAttached();
-
-  __block FBLPromise* initPromise = [FBLPromise pendingPromise];
 
   dispatch_group_async(group, queue, ^{
     FIRCLSHostInitialize(&_firclsContext.readonly->host);
@@ -231,10 +228,7 @@ FBLPromise* FIRCLSContextInitialize(FIRCLSContextInitData* initData,
     if (!FIRCLSAllocatorProtect(_firclsContext.allocator)) {
       FIRCLSSDKLog("Error: Memory protection failed\n");
     }
-    [initPromise fulfill:nil];
   });
-
-  return initPromise;
 }
 
 void FIRCLSContextBaseInit(void) {

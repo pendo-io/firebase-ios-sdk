@@ -17,9 +17,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class FIRCLSFileManager;
-@class FIRCLSDataCollectionArbiter;
-@class FIRCLSApplicationIdentifierModel;
-@class FIRCLSInstallIdentifierModel;
 @class FIRCLSExecutionIdentifierModel;
 @class FIRCLSOnDemandModel;
 @class FIRCLSSettings;
@@ -39,26 +36,20 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface FIRCLSManagerData : NSObject
 
-- (instancetype)initWithGoogleAppID:(NSString *)googleAppID
-                        fileManager:(FIRCLSFileManager *)fileManager
-                        dataArbiter:(FIRCLSDataCollectionArbiter *)dataArbiter
-                           settings:(FIRCLSSettings *)settings
-                      onDemandModel:(FIRCLSOnDemandModel *)onDemandModel NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithDeviceID:(NSString *)deviceID
+                     fileManager:(FIRCLSFileManager *)fileManager
+                        settings:(FIRCLSSettings *)settings
+                   onDemandModel:(FIRCLSOnDemandModel *)onDemandModel NS_DESIGNATED_INITIALIZER;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
-@property(nonatomic, readonly) NSString *googleAppID;
+@property(nonatomic, readonly) NSString *deviceID;
 
 @property(nonatomic, strong) FIRCLSFileManager *fileManager;
 
-@property(nonatomic, strong) FIRCLSDataCollectionArbiter *dataArbiter;
-
-// Uniquely identifies a build / binary of the app
-@property(nonatomic, strong) FIRCLSApplicationIdentifierModel *appIDModel;
-
 // Uniquely identifies an install of the app
-@property(nonatomic, strong) FIRCLSInstallIdentifierModel *installIDModel;
+@property(nonatomic, strong) NSString *installID;
 
 // Uniquely identifies a run of the app
 @property(nonatomic, strong) FIRCLSExecutionIdentifierModel *executionIDModel;

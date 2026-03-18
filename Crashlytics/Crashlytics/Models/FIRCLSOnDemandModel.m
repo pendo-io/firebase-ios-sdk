@@ -15,7 +15,6 @@
 #import <Foundation/Foundation.h>
 
 #import "Crashlytics/Crashlytics/Components/FIRCLSApplication.h"
-#import "Crashlytics/Crashlytics/DataCollection/FIRCLSDataCollectionArbiter.h"
 #import "Crashlytics/Crashlytics/DataCollection/FIRCLSDataCollectionToken.h"
 #import "Crashlytics/Crashlytics/Handlers/FIRCLSException.h"
 #import "Crashlytics/Crashlytics/Helpers/FIRCLSLogger.h"

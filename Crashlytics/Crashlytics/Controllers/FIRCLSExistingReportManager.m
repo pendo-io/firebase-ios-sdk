@@ -16,7 +16,6 @@
 
 #import "Crashlytics/Crashlytics/Controllers/FIRCLSManagerData.h"
 #import "Crashlytics/Crashlytics/Controllers/FIRCLSReportUploader.h"
-#import "Crashlytics/Crashlytics/DataCollection/FIRCLSDataCollectionArbiter.h"
 #import "Crashlytics/Crashlytics/DataCollection/FIRCLSDataCollectionToken.h"
 #import "Crashlytics/Crashlytics/Helpers/FIRCLSLogger.h"
 #import "Crashlytics/Crashlytics/Models/FIRCLSFileManager.h"
@@ -35,7 +34,6 @@ NSUInteger const FIRCLSMaxUnsentReports = 4;
 @property(nonatomic, strong) FIRCLSReportUploader *reportUploader;
 @property(nonatomic, strong) NSOperationQueue *operationQueue;
 @property(nonatomic, strong) FIRCLSSettings *settings;
-@property(nonatomic, strong) FIRCLSDataCollectionArbiter *dataArbiter;
 @property(nonatomic, strong) FIRCLSOnDemandModel *onDemandModel;
 
 // This list of active reports excludes the brand new active report that will be created this run of
@@ -60,7 +58,6 @@ NSUInteger const FIRCLSMaxUnsentReports = 4;
   _fileManager = managerData.fileManager;
   _settings = managerData.settings;
   _operationQueue = managerData.operationQueue;
-  _dataArbiter = managerData.dataArbiter;
   _reportUploader = reportUploader;
   _onDemandModel = managerData.onDemandModel;
 
@@ -118,12 +115,6 @@ NSInteger compareNewer(FIRCLSInternalReport *reportA,
   [reports sortUsingFunction:compareNewer context:nil];
   NSString *newestReportPath = [reports firstObject].path;
 
-  // If there was a MetricKit event recorded on the last run of the app, add it to the newest
-  // report.
-  if (self.settings.metricKitCollectionEnabled &&
-      [self.fileManager metricKitDiagnosticFileExists]) {
-    [self.fileManager createEmptyMetricKitFile:newestReportPath];
-  }
 
   for (FIRCLSInternalReport *report in reports) {
     // Delete reports without any crashes or non-fatals

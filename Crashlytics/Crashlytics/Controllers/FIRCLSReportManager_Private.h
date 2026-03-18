@@ -16,8 +16,6 @@
 #import "Crashlytics/Crashlytics/Controllers/FIRCLSReportUploader.h"
 #import "Crashlytics/Crashlytics/Models/FIRCLSLaunchMarkerModel.h"
 
-@class FIRCLSInstallIdentifierModel;
-
 @interface FIRCLSReportManager ()
 
 @property(nonatomic, strong) NSOperationQueue *operationQueue;

@@ -34,9 +34,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// a new Session ID.
 @property(nonatomic, copy) NSString *appQualitySessionId;
 
-- (FBLPromise *)setupContextWithReport:(FIRCLSInternalReport *)report
-                              settings:(FIRCLSSettings *)settings
-                           fileManager:(FIRCLSFileManager *)fileManager;
+- (void)setupContextWithReport:(FIRCLSInternalReport *)report
+                      settings:(FIRCLSSettings *)settings
+                   fileManager:(FIRCLSFileManager *)fileManager;
 
 @end
 

@@ -15,11 +15,10 @@
 
 #import "Crashlytics/Crashlytics/Components/FIRCLSApplication.h"
 #import "Crashlytics/Crashlytics/Controllers/FIRCLSManagerData.h"
-#import "Crashlytics/Crashlytics/Controllers/FIRCLSReportUploader_Private.h"
+#import "Crashlytics/Crashlytics/Controllers/FIRCLSReportUploader.h"
 #import "Crashlytics/Crashlytics/DataCollection/FIRCLSDataCollectionToken.h"
 #import "Crashlytics/Crashlytics/Helpers/FIRCLSDefines.h"
 #import "Crashlytics/Crashlytics/Models/FIRCLSFileManager.h"
-#import "Crashlytics/Crashlytics/Models/FIRCLSInstallIdentifierModel.h"
 #import "Crashlytics/Crashlytics/Models/FIRCLSInternalReport.h"
 #import "Crashlytics/Crashlytics/Models/FIRCLSSettings.h"
 #import "Crashlytics/Crashlytics/Models/FIRCLSSymbolResolver.h"
@@ -32,9 +31,8 @@
 
 
 @interface FIRCLSReportUploader ()
-@property(nonatomic, strong) FIRCLSInstallIdentifierModel *installIDModel;
 
-@property(nonatomic, readonly) NSString *googleAppID;
+@property(nonatomic, readonly) NSString *deviceID;
 
 @end
 
@@ -47,8 +45,7 @@
   }
 
   _operationQueue = managerData.operationQueue;
-  _googleAppID = managerData.googleAppID;
-  _installIDModel = managerData.installIDModel;
+  _deviceID = managerData.deviceID;
   _fileManager = managerData.fileManager;
 
   return self;
@@ -76,26 +73,7 @@
   // symbolication operation may be computationally intensive.
   FIRCLSApplicationActivity(
       FIRCLSApplicationActivityDefault, @"Crashlytics Crash Report Processing", ^{
-        // Check to see if the FID has rotated before we construct the payload
-        // so that the payload has an updated value.
-        //
-        // If we're in urgent mode, this will be running on the main thread. Since
-        // the FIID callback is run on the main thread, this call can deadlock in
-        // urgent mode. Since urgent mode happens when the app is in a crash loop,
-        // we can safely assume users aren't rotating their FIID, so this can be skipped.
-        if (!urgent) {
-          [self.installIDModel regenerateInstallIDIfNeededWithBlock:^(
-                                   NSString *_Nonnull newFIID, NSString *_Nonnull authToken) {
-            self.fiid = [newFIID copy];
-            self.authToken = [authToken copy];
-          }];
-        } else {
-          FIRCLSWarningLog(
-              @"Crashlytics skipped rotating the Install ID during urgent mode because it is run "
-              @"on the main thread, which can't succeed. This can happen if the app crashed the "
-              @"last run and Crashlytics is uploading urgently.");
-        }
-
+        
         // Run on-device symbolication before packaging if we should process
         if (shouldProcess) {
           if (![self.fileManager moveItemAtPath:report.path
