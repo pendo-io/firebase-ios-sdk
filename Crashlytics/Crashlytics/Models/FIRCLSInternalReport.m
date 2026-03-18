@@ -21,27 +21,27 @@
 #import "Crashlytics/Crashlytics/Helpers/FIRCLSLogger.h"
 #import "Crashlytics/Crashlytics/Models/FIRCLSFileManager.h"
 
-NSString *const FIRCLSCustomFatalIndicatorFile = @"custom_fatal.clsrecord";
-NSString *const FIRCLSReportBinaryImageFile = @"binary_images.clsrecord";
-NSString *const FIRCLSReportExceptionFile = @"exception.clsrecord";
-NSString *const FIRCLSReportCustomExceptionAFile = @"custom_exception_a.clsrecord";
-NSString *const FIRCLSReportCustomExceptionBFile = @"custom_exception_b.clsrecord";
-NSString *const FIRCLSReportSignalFile = @"signal.clsrecord";
-NSString *const FIRCLSMetricKitFatalReportFile = @"metric_kit_fatal.clsrecord";
-NSString *const FIRCLSMetricKitNonfatalReportFile = @"metric_kit_nonfatal.clsrecord";
+NSString *const FIRCLSCustomFatalIndicatorFile = @"pnd_custom_fatal.clsrecord";
+NSString *const FIRCLSReportBinaryImageFile = @"pnd_binary_images.clsrecord";
+NSString *const FIRCLSReportExceptionFile = @"pnd_exception.clsrecord";
+NSString *const FIRCLSReportCustomExceptionAFile = @"pnd_custom_exception_a.clsrecord";
+NSString *const FIRCLSReportCustomExceptionBFile = @"pnd_custom_exception_b.clsrecord";
+NSString *const FIRCLSReportSignalFile = @"pnd_signal.clsrecord";
+NSString *const FIRCLSMetricKitFatalReportFile = @"pnd_metric_kit_fatal.clsrecord";
+NSString *const FIRCLSMetricKitNonfatalReportFile = @"pnd_metric_kit_nonfatal.clsrecord";
 #if CLS_MACH_EXCEPTION_SUPPORTED
-NSString *const FIRCLSReportMachExceptionFile = @"mach_exception.clsrecord";
+NSString *const FIRCLSReportMachExceptionFile = @"pnd_mach_exception.clsrecord";
 #endif
-NSString *const FIRCLSReportMetadataFile = @"metadata.clsrecord";
-NSString *const FIRCLSReportErrorAFile = @"errors_a.clsrecord";
-NSString *const FIRCLSReportErrorBFile = @"errors_b.clsrecord";
-NSString *const FIRCLSReportLogAFile = @"log_a.clsrecord";
-NSString *const FIRCLSReportLogBFile = @"log_b.clsrecord";
-NSString *const FIRCLSReportInternalIncrementalKVFile = @"internal_incremental_kv.clsrecord";
-NSString *const FIRCLSReportInternalCompactedKVFile = @"internal_compacted_kv.clsrecord";
-NSString *const FIRCLSReportUserIncrementalKVFile = @"user_incremental_kv.clsrecord";
-NSString *const FIRCLSReportUserCompactedKVFile = @"user_compacted_kv.clsrecord";
-NSString *const FIRCLSReportRolloutsFile = @"rollouts.clsrecord";
+NSString *const FIRCLSReportMetadataFile = @"pnd_metadata.clsrecord";
+NSString *const FIRCLSReportErrorAFile = @"pnd_errors_a.clsrecord";
+NSString *const FIRCLSReportErrorBFile = @"pnd_errors_b.clsrecord";
+NSString *const FIRCLSReportLogAFile = @"pnd_log_a.clsrecord";
+NSString *const FIRCLSReportLogBFile = @"pnd_log_b.clsrecord";
+NSString *const FIRCLSReportInternalIncrementalKVFile = @"pnd_internal_incremental_kv.clsrecord";
+NSString *const FIRCLSReportInternalCompactedKVFile = @"pnd_internal_compacted_kv.clsrecord";
+NSString *const FIRCLSReportUserIncrementalKVFile = @"pnd_user_incremental_kv.clsrecord";
+NSString *const FIRCLSReportUserCompactedKVFile = @"pnd_user_compacted_kv.clsrecord";
+NSString *const FIRCLSReportRolloutsFile = @"pnd_rollouts.clsrecord";
 
 @interface FIRCLSInternalReport () {
   NSString *_identifier;

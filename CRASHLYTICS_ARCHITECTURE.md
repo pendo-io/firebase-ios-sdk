@@ -112,7 +112,36 @@ Because a crashed process cannot safely format a complex JSON payload or make ne
 
 ---
 
-## Summary of Directory Flow
-1.  `active/` ➔ Raw append-only data written synchronously as the process dies.
-2.  `processing/` ➔ Moved here on next launch. Data is parsed and structured.
-3.  `prepared/` ➔ Final output destination. Contains the consolidated, ready-to-consume crash report.
+## 7. Folder Structure and File Saving
+
+On startup, when `FIRCrashlytics startWithDeviceID:` is called, the `FIRCLSFileManager` guarantees the existence of a base cache directory (typically `~/Library/Caches/com.crashlytics.data/{bundle_id}/v5/reports/`). 
+It actively creates three main subdirectories:
+
+1.  **`active/`**: This is where the *current* session's data is written. On startup, a new folder is created here named after the unique `executionIdentifier` (e.g., `active/1234-5678-ABCD/`).
+2.  **`processing/`**: When the app launches *after* a crash, the previous session's folder from `active/` is moved here to be parsed and symbolicated on a background thread.
+3.  **`prepared/`**: Once processing is complete, the final structured files are moved here.
+
+### Files Saved During a Crash
+
+When a crash occurs, the engine synchronously writes multiple separate files directly into the `active/{executionIdentifier}/` directory. The crash state is fragmented into these specific files because different handlers (Mach, POSIX, NSException) log different pieces of data, and keeping them separate avoids complex lock management.
+
+Common files written during a crash include:
+*   `metadata.clsrecord`: Basic device info, OS version, and session identity.
+*   `binary_images.clsrecord`: The list of loaded Mach-O images and their UUIDs (crucial for symbolication).
+*   `exception.clsrecord`: Stack traces and reasons for `NSException` and C++ exceptions.
+*   `mach_exception.clsrecord`: Thread states and registers for Mach-level faults.
+*   `signal.clsrecord`: Thread states and registers for POSIX signals.
+
+### The `.clsrecord` Format
+
+The `.clsrecord` format is a custom, append-only **JSON-Lines (NDJSON)** format.
+
+*   **Why it exists:** Standard JSON libraries (like `NSJSONSerialization`) allocate memory (`malloc`) and use Objective-C objects, making them **unsafe** to use during a crash. Crashlytics needs to write structured data safely without triggering a secondary deadlock.
+*   **How it works:** The engine uses custom, low-level C functions (e.g., `FIRCLSFileWriteSectionStart`, `FIRCLSFileWriteHashEntryString`) which construct JSON syntax manually and write it to disk using raw `write()` system calls.
+*   **Format:** Each complete write appends a valid JSON object followed by a newline (`\n`). When reading the file on the next launch, Crashlytics simply splits the file by `\n` and parses each line using standard JSON tools. 
+
+Example of `.clsrecord` contents:
+```json
+{"identity":{"session_id":"1234-ABCD","started_at":167888}}
+{"application":{"bundle_id":"com.pendo.example"}}
+```

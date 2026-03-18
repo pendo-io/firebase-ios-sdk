@@ -48,14 +48,6 @@ void FIRCLSSDKFileLog(FIRCLSInternalLogLevel level, const char* format, ...) {
   va_list args;
   va_start(args, format);
 
-#if DEBUG && 0
-  // It's nice to use printf here, so all the formatting works. However, its possible to hit a
-  // deadlock if you call vfprintf in a crash handler. So, this code is handy to keep, just in case,
-  // if there's a really tough thing to debug.
-  FILE* file = fopen(path, "a+");
-  vfprintf(file, format, args);
-  fclose(file);
-#else
   size_t formatLength = strlen(format);
   for (size_t idx = 0; idx < formatLength; ++idx) {
     if (format[idx] != '%') {
@@ -112,6 +104,5 @@ void FIRCLSSDKFileLog(FIRCLSInternalLogLevel level, const char* format, ...) {
         break;
     }
   }
-#endif
   va_end(args);
 }
