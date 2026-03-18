@@ -45,7 +45,7 @@
   [_operationQueue setMaxConcurrentOperationCount:1];
   [_operationQueue setName:[sdkBundleID stringByAppendingString:@".work-queue"]];
 
-  _dispatchQueue = dispatch_queue_create("com.google.firebase.crashlytics.startup", 0);
+  _dispatchQueue = dispatch_queue_create("com.pendo.crashlytics.startup", 0);
   _operationQueue.underlyingQueue = _dispatchQueue;
 
   return self;

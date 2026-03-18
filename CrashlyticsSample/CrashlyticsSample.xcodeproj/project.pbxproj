@@ -7,97 +7,102 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		671A4CA29991ADAAE92AB8F0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = AA49D8F13212E39568713981 /* main.m */; };
-		68400EAE9475DBF3B4DD509A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54CBB9AF1E68185792947325 /* Foundation.framework */; };
-		95074DDC724A16AA5990C5F4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 87561C1EA61D2D16BEDB7C16 /* AppDelegate.m */; };
-		9EC2EB4FE2DE43AE15F9CBD7 /* Pods_CrashlyticsSample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 594E0816946C22049F041A13 /* Pods_CrashlyticsSample.framework */; };
+		203DFD8CAC2FD390B3619EA6 /* Pods_CrashlyticsSample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A680413BC860981CB2A5E3E1 /* Pods_CrashlyticsSample.framework */; };
+		7FCD322ACA525827E422C1F5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 483DF7A015CD17E2DAB925C1 /* Foundation.framework */; };
+		936A32F8E109B71490D88D3C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A8F760A50C27BC4958990EB /* main.m */; };
+		D96FA7107047CA9A1E2ECDF4 /* CrashHelpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = 690F9516B1B30F7D21511745 /* CrashHelpers.mm */; };
+		F00B33DEBC5C4E6AD5FEA34F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1475F9E5BD29FE540041CDFB /* AppDelegate.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		54CBB9AF1E68185792947325 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		594E0816946C22049F041A13 /* Pods_CrashlyticsSample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CrashlyticsSample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		68FB2A0AB7D8C3B83665BFFA /* AppDelegate.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		6A02B7528C0E2E2FE76526DC /* CrashlyticsSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CrashlyticsSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		87561C1EA61D2D16BEDB7C16 /* AppDelegate.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		AA49D8F13212E39568713981 /* main.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		B0EA29991BA5B37353F1300C /* Pods-CrashlyticsSample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CrashlyticsSample.debug.xcconfig"; path = "Target Support Files/Pods-CrashlyticsSample/Pods-CrashlyticsSample.debug.xcconfig"; sourceTree = "<group>"; };
-		B463DF8A8590F10B08B1B16B /* Pods-CrashlyticsSample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CrashlyticsSample.release.xcconfig"; path = "Target Support Files/Pods-CrashlyticsSample/Pods-CrashlyticsSample.release.xcconfig"; sourceTree = "<group>"; };
-		CE4B78143B874B9B6C898876 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		02B62F5F90BF298E7ACBA4FF /* AppDelegate.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		1475F9E5BD29FE540041CDFB /* AppDelegate.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		1A08B10B53FDD78D7C957686 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		22B2B3773337C5107BA5C4E2 /* Pods-CrashlyticsSample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CrashlyticsSample.debug.xcconfig"; path = "Target Support Files/Pods-CrashlyticsSample/Pods-CrashlyticsSample.debug.xcconfig"; sourceTree = "<group>"; };
+		35846790AD94525EF37AFAF5 /* CrashHelpers.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = CrashHelpers.h; sourceTree = "<group>"; };
+		3B2AD22FF6A9F44404E0EF33 /* CrashlyticsSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CrashlyticsSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3BD2518E0801DB9C94734AF7 /* Pods-CrashlyticsSample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CrashlyticsSample.release.xcconfig"; path = "Target Support Files/Pods-CrashlyticsSample/Pods-CrashlyticsSample.release.xcconfig"; sourceTree = "<group>"; };
+		483DF7A015CD17E2DAB925C1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		690F9516B1B30F7D21511745 /* CrashHelpers.mm */ = {isa = PBXFileReference; includeInIndex = 1; path = CrashHelpers.mm; sourceTree = "<group>"; };
+		6A8F760A50C27BC4958990EB /* main.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		A680413BC860981CB2A5E3E1 /* Pods_CrashlyticsSample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CrashlyticsSample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		0F74B8C604755FBB27FAF15A /* Frameworks */ = {
+		C2A4D18A49F328842B7DE022 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				68400EAE9475DBF3B4DD509A /* Foundation.framework in Frameworks */,
-				9EC2EB4FE2DE43AE15F9CBD7 /* Pods_CrashlyticsSample.framework in Frameworks */,
+				7FCD322ACA525827E422C1F5 /* Foundation.framework in Frameworks */,
+				203DFD8CAC2FD390B3619EA6 /* Pods_CrashlyticsSample.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		3B04D95BCB388AAF4BCA3DB1 /* iOS */ = {
+		0D73954F27847B935B6E5B01 /* iOS */ = {
 			isa = PBXGroup;
 			children = (
-				54CBB9AF1E68185792947325 /* Foundation.framework */,
+				483DF7A015CD17E2DAB925C1 /* Foundation.framework */,
 			);
 			name = iOS;
 			sourceTree = "<group>";
 		};
-		48435D380EC4BE000113E617 /* Pods */ = {
+		260B9F016D79DB76569EB2B2 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B463DF8A8590F10B08B1B16B /* Pods-CrashlyticsSample.release.xcconfig */,
-				B0EA29991BA5B37353F1300C /* Pods-CrashlyticsSample.debug.xcconfig */,
+				3B2AD22FF6A9F44404E0EF33 /* CrashlyticsSample.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		536D34DB43AB343DFD053F63 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0D73954F27847B935B6E5B01 /* iOS */,
+				A680413BC860981CB2A5E3E1 /* Pods_CrashlyticsSample.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		8F247C78144A06BEA67E29CE = {
+			isa = PBXGroup;
+			children = (
+				260B9F016D79DB76569EB2B2 /* Products */,
+				536D34DB43AB343DFD053F63 /* Frameworks */,
+				6A8F760A50C27BC4958990EB /* main.m */,
+				02B62F5F90BF298E7ACBA4FF /* AppDelegate.h */,
+				1475F9E5BD29FE540041CDFB /* AppDelegate.m */,
+				35846790AD94525EF37AFAF5 /* CrashHelpers.h */,
+				690F9516B1B30F7D21511745 /* CrashHelpers.mm */,
+				1A08B10B53FDD78D7C957686 /* Info.plist */,
+				D9F09798A8DB468F32229BC6 /* Pods */,
+			);
+			sourceTree = "<group>";
+		};
+		D9F09798A8DB468F32229BC6 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				3BD2518E0801DB9C94734AF7 /* Pods-CrashlyticsSample.release.xcconfig */,
+				22B2B3773337C5107BA5C4E2 /* Pods-CrashlyticsSample.debug.xcconfig */,
 			);
 			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
-		7AE073DFCDB54C90FA225A4C /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				3B04D95BCB388AAF4BCA3DB1 /* iOS */,
-				594E0816946C22049F041A13 /* Pods_CrashlyticsSample.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		AABA7EAF0DE87AAC668F8A97 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				6A02B7528C0E2E2FE76526DC /* CrashlyticsSample.app */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		AAE2B53215EF64A53BDEB068 = {
-			isa = PBXGroup;
-			children = (
-				AABA7EAF0DE87AAC668F8A97 /* Products */,
-				7AE073DFCDB54C90FA225A4C /* Frameworks */,
-				AA49D8F13212E39568713981 /* main.m */,
-				68FB2A0AB7D8C3B83665BFFA /* AppDelegate.h */,
-				87561C1EA61D2D16BEDB7C16 /* AppDelegate.m */,
-				CE4B78143B874B9B6C898876 /* Info.plist */,
-				48435D380EC4BE000113E617 /* Pods */,
-			);
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		63AE1D133FDE5A194C919A84 /* CrashlyticsSample */ = {
+		25F551D8422284CB9BA847C7 /* CrashlyticsSample */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C9F7FABD0C2C4CAD046C61FF /* Build configuration list for PBXNativeTarget "CrashlyticsSample" */;
+			buildConfigurationList = 0C5EB8DBC382AC8F6E0D63AB /* Build configuration list for PBXNativeTarget "CrashlyticsSample" */;
 			buildPhases = (
-				C0A76730E7081B8B73A4DA95 /* [CP] Check Pods Manifest.lock */,
-				C9F8260FD055D3D7EBF773E3 /* Sources */,
-				0F74B8C604755FBB27FAF15A /* Frameworks */,
-				E798F75BB426A585638CBE1C /* Resources */,
-				4E5A4653903FEF4D09F8944B /* [CP] Embed Pods Frameworks */,
+				D840A85A1B73179F978F4C3A /* [CP] Check Pods Manifest.lock */,
+				EE71E665DB0BC391C21D93C3 /* Sources */,
+				C2A4D18A49F328842B7DE022 /* Frameworks */,
+				66FFCC33CA989244730A26D8 /* Resources */,
+				23BC4E7956FD9A7823CFFFE8 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -105,19 +110,19 @@
 			);
 			name = CrashlyticsSample;
 			productName = CrashlyticsSample;
-			productReference = 6A02B7528C0E2E2FE76526DC /* CrashlyticsSample.app */;
+			productReference = 3B2AD22FF6A9F44404E0EF33 /* CrashlyticsSample.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		10F4EE8F33B25F22E170A67B /* Project object */ = {
+		8FA7210C9ABDBA330EC0DADB /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1500;
 				LastUpgradeCheck = 1500;
 			};
-			buildConfigurationList = 61420C78B8C5ED21FC375692 /* Build configuration list for PBXProject "CrashlyticsSample" */;
+			buildConfigurationList = DB830101B8D799A5E619FD4E /* Build configuration list for PBXProject "CrashlyticsSample" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -125,18 +130,18 @@
 				en,
 				Base,
 			);
-			mainGroup = AAE2B53215EF64A53BDEB068;
-			productRefGroup = AABA7EAF0DE87AAC668F8A97 /* Products */;
+			mainGroup = 8F247C78144A06BEA67E29CE;
+			productRefGroup = 260B9F016D79DB76569EB2B2 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				63AE1D133FDE5A194C919A84 /* CrashlyticsSample */,
+				25F551D8422284CB9BA847C7 /* CrashlyticsSample */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		E798F75BB426A585638CBE1C /* Resources */ = {
+		66FFCC33CA989244730A26D8 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -146,7 +151,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		4E5A4653903FEF4D09F8944B /* [CP] Embed Pods Frameworks */ = {
+		23BC4E7956FD9A7823CFFFE8 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -164,7 +169,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CrashlyticsSample/Pods-CrashlyticsSample-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C0A76730E7081B8B73A4DA95 /* [CP] Check Pods Manifest.lock */ = {
+		D840A85A1B73179F978F4C3A /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -189,37 +194,22 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		C9F8260FD055D3D7EBF773E3 /* Sources */ = {
+		EE71E665DB0BC391C21D93C3 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				671A4CA29991ADAAE92AB8F0 /* main.m in Sources */,
-				95074DDC724A16AA5990C5F4 /* AppDelegate.m in Sources */,
+				936A32F8E109B71490D88D3C /* main.m in Sources */,
+				F00B33DEBC5C4E6AD5FEA34F /* AppDelegate.m in Sources */,
+				D96FA7107047CA9A1E2ECDF4 /* CrashHelpers.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		4329C8B347CB3077E07F0476 /* Debug */ = {
+		1BB2C7F427DED05BE2324A64 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B0EA29991BA5B37353F1300C /* Pods-CrashlyticsSample.debug.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				INFOPLIST_FILE = Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.CrashlyticsSample;
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		80BCC43E7CD6006E006BA51F /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = B463DF8A8590F10B08B1B16B /* Pods-CrashlyticsSample.release.xcconfig */;
+			baseConfigurationReference = 3BD2518E0801DB9C94734AF7 /* Pods-CrashlyticsSample.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -234,7 +224,7 @@
 			};
 			name = Release;
 		};
-		B30D6B6BB4A93224BA2D08F9 /* Release */ = {
+		69D35C89B2FAF196BB5862D0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -288,7 +278,7 @@
 			};
 			name = Release;
 		};
-		C1BEE43EBEA64C1F305362FC /* Debug */ = {
+		95159D7C684B12692FA46DC6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -349,28 +339,44 @@
 			};
 			name = Debug;
 		};
+		CA5456558CE582D87FD0A320 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 22B2B3773337C5107BA5C4E2 /* Pods-CrashlyticsSample.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				INFOPLIST_FILE = Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.CrashlyticsSample;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		61420C78B8C5ED21FC375692 /* Build configuration list for PBXProject "CrashlyticsSample" */ = {
+		0C5EB8DBC382AC8F6E0D63AB /* Build configuration list for PBXNativeTarget "CrashlyticsSample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				C1BEE43EBEA64C1F305362FC /* Debug */,
-				B30D6B6BB4A93224BA2D08F9 /* Release */,
+				1BB2C7F427DED05BE2324A64 /* Release */,
+				CA5456558CE582D87FD0A320 /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C9F7FABD0C2C4CAD046C61FF /* Build configuration list for PBXNativeTarget "CrashlyticsSample" */ = {
+		DB830101B8D799A5E619FD4E /* Build configuration list for PBXProject "CrashlyticsSample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				80BCC43E7CD6006E006BA51F /* Release */,
-				4329C8B347CB3077E07F0476 /* Debug */,
+				95159D7C684B12692FA46DC6 /* Debug */,
+				69D35C89B2FAF196BB5862D0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 10F4EE8F33B25F22E170A67B /* Project object */;
+	rootObject = 8FA7210C9ABDBA330EC0DADB /* Project object */;
 }

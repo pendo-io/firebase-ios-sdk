@@ -33,7 +33,7 @@ NSString* FIRCLSApplicationGetBundleIdentifier(void) {
 
 NSString* FIRCLSApplicationGetSDKBundleID(void) {
   return
-      [@"com.google.firebase.crashlytics." stringByAppendingString:FIRCLSApplicationGetPlatform()];
+      [@"com.pendo.crashlytics." stringByAppendingString:FIRCLSApplicationGetPlatform()];
 }
 
 // Legacy function, we use FIRCLSApplicationGetFirebasePlatform now for platform specification.
