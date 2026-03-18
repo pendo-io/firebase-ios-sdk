@@ -35,8 +35,4 @@
                       asUrgent:(BOOL)urgent
                 withProcessing:(BOOL)shouldProcess;
 
-- (void)uploadPackagedReportAtPath:(NSString *)path
-               dataCollectionToken:(FIRCLSDataCollectionToken *)dataCollectionToken
-                          asUrgent:(BOOL)urgent;
-
 @end

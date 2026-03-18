@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
  * The Firebase Crashlytics API provides methods to annotate and manage fatal and
  * non-fatal reports captured and reported to Firebase Crashlytics.
  *
- * By default, Firebase Crashlytics is initialized with `FirebaseApp.configure()`.
+ * By default, Crashlytics is initialized with `[FIRCrashlytics startWithGoogleAppID:]`.
  *
  * Note: The Crashlytics class cannot be subclassed. If this makes testing difficult,
  * we suggest using a wrapper class or a protocol extension.
@@ -39,6 +39,14 @@ NS_SWIFT_NAME(Crashlytics)
 
 /** :nodoc: */
 - (instancetype)init NS_UNAVAILABLE;
+
+/**
+ * Initializes and accesses the singleton Crashlytics instance.
+ *
+ * @param googleAppID The Google App ID.
+ * @return The singleton Crashlytics instance.
+ */
++ (instancetype)startWithGoogleAppID:(NSString *)googleAppID NS_SWIFT_NAME(start(googleAppID:));
 
 /**
  * Accesses the singleton Crashlytics instance.

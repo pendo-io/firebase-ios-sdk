@@ -14,8 +14,6 @@
 
 #import <Foundation/Foundation.h>
 
-@class FIRInstallations;
-
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -23,27 +21,13 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface FIRCLSInstallIdentifierModel : NSObject
 
-- (instancetype)init NS_UNAVAILABLE;
-
-- (instancetype)initWithInstallations:(FIRInstallations *)instanceID NS_DESIGNATED_INITIALIZER;
+- (instancetype)init NS_DESIGNATED_INITIALIZER;
 
 /**
  * Returns the backwards compatible Crashlytics Installation UUID
  */
 @property(nonatomic, readonly) NSString *installID;
 
-/**
- * To support end-users rotating Install IDs, this will check and rotate the Install ID,
- * which can be a slow operation. This should be run in an Activity or
- * background thread.
- *
- * This method has 2 concerns:
- *  - Concern 1: We have the old Crashlytics Install ID that needs to regenerate when the FIID
- * changes. If we get a null FIID, we don't want to rotate because we don't know if it changed or
- * not.
- *  - Concern 2: Whatever the FIID is, we should send it with the Crash report so we're in sync with
- * Sessions and other Firebase SDKs
- */
 - (BOOL)regenerateInstallIDIfNeededWithBlock:(void (^)(NSString *fiid, NSString *authToken))block;
 
 @end

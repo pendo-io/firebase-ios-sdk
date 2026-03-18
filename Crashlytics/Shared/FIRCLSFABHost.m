@@ -14,7 +14,6 @@
 
 #include "Crashlytics/Shared/FIRCLSFABHost.h"
 
-#import <GoogleUtilities/GULAppEnvironmentUtil.h>
 
 #if TARGET_OS_WATCH
 #import <WatchKit/WatchKit.h>
@@ -91,5 +90,5 @@ NSString *FIRCLSHostOSDisplayVersion(void) {
 #pragma mark Public
 
 NSString *FIRCLSHostModelInfo(void) {
-  return [GULAppEnvironmentUtil deviceSimulatorModel];
+  return FIRCLSHostSysctlEntry("hw.machine");
 }

@@ -31,9 +31,6 @@ Pod::Spec.new do |s|
     'Crashlytics/Protogen/**/*.{c,h,m,mm}',
     'Crashlytics/Shared/**/*.{c,h,m,mm}',
     'Crashlytics/third_party/**/*.{c,h,m,mm}',
-    'FirebaseCore/Extension/*.h',
-    'FirebaseInstallations/Source/Library/Private/*.h',
-    'Interop/Analytics/Public/*.h',
   ]
 
   s.resource_bundles = {
@@ -59,13 +56,7 @@ Pod::Spec.new do |s|
     cp -f ./Crashlytics/CrashlyticsInputFiles.xcfilelist ./CrashlyticsInputFiles.xcfilelist
   PREPARE_COMMAND_END
 
-  s.dependency 'FirebaseCore', '~> 12.11.0'
-  s.dependency 'FirebaseInstallations', '~> 12.11.0'
-  s.dependency 'FirebaseSessions', '~> 12.11.0'
-  s.dependency 'FirebaseRemoteConfigInterop', '~> 12.11.0'
   s.dependency 'PromisesObjC', '~> 2.4'
-  s.dependency 'GoogleDataTransport', '~> 10.1'
-  s.dependency 'GoogleUtilities/Environment', '~> 8.1'
   s.dependency 'nanopb', '~> 3.30910.0'
 
   s.libraries = 'c++', 'z'

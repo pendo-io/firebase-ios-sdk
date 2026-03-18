@@ -18,7 +18,6 @@
 
 @class FBLPromise<T>;
 @class FIRCLSExistingReportManager;
-@class FIRCLSAnalyticsManager;
 @class FIRCLSManagerData;
 @class FIRCLSContextManager;
 
@@ -28,7 +27,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithManagerData:(FIRCLSManagerData *)managerData
               existingReportManager:(FIRCLSExistingReportManager *)existingReportManager
-                   analyticsManager:(FIRCLSAnalyticsManager *)analyticsManager
     NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

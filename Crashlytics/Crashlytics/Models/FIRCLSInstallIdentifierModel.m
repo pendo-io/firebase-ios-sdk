@@ -14,7 +14,6 @@
 
 #import "Crashlytics/Crashlytics/Models/FIRCLSInstallIdentifierModel.h"
 
-#import "FirebaseInstallations/Source/Library/Private/FirebaseInstallationsInternal.h"
 
 #import "Crashlytics/Crashlytics/FIRCLSUserDefaults/FIRCLSUserDefaults.h"
 #import "Crashlytics/Crashlytics/Helpers/FIRCLSLogger.h"
@@ -33,7 +32,6 @@ static unsigned long long FIRCLSInstallationsWaitTime = 10 * NSEC_PER_SEC;
 
 @property(nonatomic, copy) NSString *installID;
 
-@property(nonatomic, readonly) FIRInstallations *installations;
 
 @end
 
@@ -43,7 +41,7 @@ static unsigned long long FIRCLSInstallationsWaitTime = 10 * NSEC_PER_SEC;
 // overridden setters and getters
 @synthesize installID = _installID;
 
-- (instancetype)initWithInstallations:(FIRInstallations *)installations {
+- (instancetype)init {
   self = [super init];
   if (!self) {
     return nil;
@@ -51,7 +49,6 @@ static unsigned long long FIRCLSInstallationsWaitTime = 10 * NSEC_PER_SEC;
 
   // capture the install ID information
   _installID = [self readInstallationUUID].copy;
-  _installations = installations;
 
   if (!_installID) {
     FIRCLSDebugLog(@"Generating Install ID");
@@ -99,45 +96,10 @@ static unsigned long long FIRCLSInstallationsWaitTime = 10 * NSEC_PER_SEC;
 #pragma mark Privacy Shield
 
 - (BOOL)regenerateInstallIDIfNeededWithBlock:(void (^)(NSString *fiid, NSString *authToken))block {
-  BOOL __block didRotate = false;
-  NSString __block *authTokenComplete = @"";
-  NSString __block *currentIIDComplete = @"";
-
-  // Installations Completions run async, so wait a reasonable amount of time for it to finish.
-  dispatch_group_t workingGroup = dispatch_group_create();
-
-  dispatch_group_enter(workingGroup);
-  [self.installations
-      authTokenWithCompletion:^(FIRInstallationsAuthTokenResult *_Nullable tokenResult,
-                                NSError *_Nullable error) {
-        authTokenComplete = tokenResult.authToken;
-        dispatch_group_leave(workingGroup);
-      }];
-
-  dispatch_group_enter(workingGroup);
-  [self.installations
-      installationIDWithCompletion:^(NSString *_Nullable currentIID, NSError *_Nullable error) {
-        currentIIDComplete = currentIID;
-        didRotate = [self rotateCrashlyticsInstallUUIDWithIID:currentIID error:error];
-
-        if (didRotate) {
-          FIRCLSInfoLog(@"Rotated Crashlytics Install UUID because Firebase Install ID changed");
-        }
-        dispatch_group_leave(workingGroup);
-      }];
-
-  intptr_t result = dispatch_group_wait(
-      workingGroup, dispatch_time(DISPATCH_TIME_NOW, FIRCLSInstallationsWaitTime));
-
-  if (result != 0) {
-    FIRCLSErrorLog(@"Crashlytics timed out while checking for Firebase Installation ID");
-  }
-
-  // Provide the IID to the callback. For this case we don't care
-  // if the FIID is null because it's the best we can do - we just want
-  // to send up the same FIID that is sent by other SDKs (eg. the Sessions SDK).
-  block(currentIIDComplete, authTokenComplete);
-  return didRotate;
+  // In a standalone crash reporter, we do not integrate with Firebase installations.
+  // We just use the locally generated install ID.
+  block(self.installID, @"");
+  return NO;
 }
 
 - (BOOL)rotateCrashlyticsInstallUUIDWithIID:(NSString *_Nullable)currentIID

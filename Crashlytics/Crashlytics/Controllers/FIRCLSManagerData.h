@@ -17,7 +17,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class FIRCLSFileManager;
-@class FIRInstallations;
 @class FIRCLSDataCollectionArbiter;
 @class FIRCLSApplicationIdentifierModel;
 @class FIRCLSInstallIdentifierModel;
@@ -26,8 +25,6 @@ NS_ASSUME_NONNULL_BEGIN
 @class FIRCLSSettings;
 @class FIRCLSLaunchMarkerModel;
 @class FIRCLSContextManager;
-@class GDTCORTransport;
-@protocol FIRAnalyticsInterop;
 
 /*
  * FIRCLSManagerData's purpose is to simplify the adding and removing of
@@ -43,9 +40,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FIRCLSManagerData : NSObject
 
 - (instancetype)initWithGoogleAppID:(NSString *)googleAppID
-                    googleTransport:(GDTCORTransport *)googleTransport
-                      installations:(FIRInstallations *)installations
-                          analytics:(nullable id<FIRAnalyticsInterop>)analytics
                         fileManager:(FIRCLSFileManager *)fileManager
                         dataArbiter:(FIRCLSDataCollectionArbiter *)dataArbiter
                            settings:(FIRCLSSettings *)settings
@@ -55,12 +49,6 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)new NS_UNAVAILABLE;
 
 @property(nonatomic, readonly) NSString *googleAppID;
-
-@property(nonatomic, strong) GDTCORTransport *googleTransport;
-
-@property(nonatomic, strong) FIRInstallations *installations;
-
-@property(nonatomic, strong) id<FIRAnalyticsInterop> analytics;
 
 @property(nonatomic, strong) FIRCLSFileManager *fileManager;
 

@@ -20,8 +20,6 @@
 #import "FBLPromises.h"
 #endif
 
-#import "FirebaseCore/Extension/FirebaseCoreInternal.h"
-
 #import "Crashlytics/Crashlytics/FIRCLSUserDefaults/FIRCLSUserDefaults.h"
 
 // The legacy data collection setting allows Fabric customers to turn off auto-
@@ -49,20 +47,18 @@ typedef NS_ENUM(NSInteger, FIRCLSDataCollectionSetting) {
   NSLock *_mutex;
   FBLPromise *_dataCollectionEnabled;
   BOOL _promiseResolved;
-  FIRApp *_app;
   NSDictionary *_appInfo;
 }
 @end
 
 @implementation FIRCLSDataCollectionArbiter
 
-- (instancetype)initWithApp:(FIRApp *)app withAppInfo:(NSDictionary *)dict {
+- (instancetype)initWithAppInfo:(NSDictionary *)dict {
   self = [super init];
   if (self) {
     _mutex = [[NSLock alloc] init];
     _appInfo = dict;
-    _app = app;
-    if ([FIRCLSDataCollectionArbiter isCrashlyticsCollectionEnabledWithApp:app withAppInfo:dict]) {
+    if ([FIRCLSDataCollectionArbiter isCrashlyticsCollectionEnabledWithAppInfo:dict]) {
       _dataCollectionEnabled = [FBLPromise resolvedWith:nil];
       _promiseResolved = YES;
     } else {
@@ -90,7 +86,7 @@ typedef NS_ENUM(NSInteger, FIRCLSDataCollectionSetting) {
 
 // This functionality is called in the initializer before self is fully initialized,
 // so a class method is used. The instance method below allows for a consistent clean API.
-+ (BOOL)isCrashlyticsCollectionEnabledWithApp:(FIRApp *)app withAppInfo:(NSDictionary *)dict {
++ (BOOL)isCrashlyticsCollectionEnabledWithAppInfo:(NSDictionary *)dict {
   FIRCLSDataCollectionSetting stickySetting = [FIRCLSDataCollectionArbiter stickySetting];
   if (stickySetting != FIRCLSDataCollectionSettingNotSet) {
     return stickySetting == FIRCLSDataCollectionSettingEnabled;
@@ -101,12 +97,11 @@ typedef NS_ENUM(NSInteger, FIRCLSDataCollectionSetting) {
       [firebaseCrashlyticsCollectionEnabled isKindOfClass:[NSNumber class]]) {
     return [firebaseCrashlyticsCollectionEnabled boolValue];
   }
-  return [app isDataCollectionDefaultEnabled];
+  return YES; // Default to enabled
 }
 
 - (BOOL)isCrashlyticsCollectionEnabled {
-  return [FIRCLSDataCollectionArbiter isCrashlyticsCollectionEnabledWithApp:_app
-                                                                withAppInfo:_appInfo];
+  return [FIRCLSDataCollectionArbiter isCrashlyticsCollectionEnabledWithAppInfo:_appInfo];
 }
 
 - (void)setCrashlyticsCollectionEnabled:(BOOL)enabled {

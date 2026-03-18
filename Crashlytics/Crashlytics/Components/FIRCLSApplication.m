@@ -17,7 +17,6 @@
 #import "Crashlytics/Crashlytics/Components/FIRCLSHost.h"
 #import "Crashlytics/Crashlytics/Helpers/FIRCLSUtility.h"
 
-#import <GoogleUtilities/GULAppEnvironmentUtil.h>
 
 #if CLS_TARGET_OS_OSX
 #import <AppKit/AppKit.h>
@@ -56,7 +55,7 @@ NSString* FIRCLSApplicationGetPlatform(void) {
 }
 
 NSString* FIRCLSApplicationGetFirebasePlatform(void) {
-  NSString* firebasePlatform = [GULAppEnvironmentUtil applePlatform];
+  NSString* firebasePlatform = FIRCLSApplicationGetPlatform();
 #if TARGET_OS_IOS
   // This check is necessary because iOS-only apps running on iPad
   // will report UIUserInterfaceIdiomPhone via UI_USER_INTERFACE_IDIOM().

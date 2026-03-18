@@ -25,9 +25,6 @@
 @implementation FIRCLSManagerData
 
 - (instancetype)initWithGoogleAppID:(NSString *)googleAppID
-                    googleTransport:(GDTCORTransport *)googleTransport
-                      installations:(FIRInstallations *)installations
-                          analytics:(nullable id<FIRAnalyticsInterop>)analytics
                         fileManager:(FIRCLSFileManager *)fileManager
                         dataArbiter:(FIRCLSDataCollectionArbiter *)dataArbiter
                            settings:(FIRCLSSettings *)settings
@@ -38,9 +35,6 @@
   }
 
   _googleAppID = googleAppID;
-  _googleTransport = googleTransport;
-  _installations = installations;
-  _analytics = analytics;
   _fileManager = fileManager;
   _dataArbiter = dataArbiter;
   _settings = settings;
@@ -48,7 +42,7 @@
   _contextManager = [[FIRCLSContextManager alloc] init];
 
   _appIDModel = [[FIRCLSApplicationIdentifierModel alloc] init];
-  _installIDModel = [[FIRCLSInstallIdentifierModel alloc] initWithInstallations:installations];
+  _installIDModel = [[FIRCLSInstallIdentifierModel alloc] init];
   _executionIDModel = [[FIRCLSExecutionIdentifierModel alloc] init];
 
   NSString *sdkBundleID = FIRCLSApplicationGetSDKBundleID();

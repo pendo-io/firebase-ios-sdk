@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #import "Crashlytics/Shared/FIRCLSConstants.h"
-#import "FirebaseCore/Extension/FirebaseCoreInternal.h"
 
 #define STR_HELPER(x) #x
 #define STR(x) STR_HELPER(x)
@@ -52,5 +51,5 @@ NSString* FIRCLSSDKGeneratorName(void) {
 }
 
 NSString* FIRCLSSDKVersion(void) {
-  return FIRFirebaseVersion();
+  return @"12.11.0";
 }

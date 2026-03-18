@@ -201,20 +201,6 @@ NSInteger compareNewer(FIRCLSInternalReport *reportA,
                                    withProcessing:NO];
     }
   }];
-
-  // Because this could happen quite a bit after the initial set of files was
-  // captured, some could be completed (deleted). So, just double-check to make sure
-  // the file still exists.
-  [self.operationQueue addOperationWithBlock:^{
-    for (NSString *path in self.preparedReportPaths) {
-      if (![self.fileManager fileExistsAtPath:path]) {
-        continue;
-      }
-      [self.reportUploader uploadPackagedReportAtPath:path
-                                  dataCollectionToken:dataCollectionToken
-                                             asUrgent:NO];
-    }
-  }];
 }
 
 - (void)processExistingActiveReportPath:(NSString *)path

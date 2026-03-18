@@ -14,39 +14,33 @@
 
 #import "Crashlytics/Crashlytics/Helpers/FIRCLSLogger.h"
 
-#import "FirebaseCore/Extension/FirebaseCoreInternal.h"
-
-FIRLoggerService kFIRLoggerCrashlytics = @"[FirebaseCrashlytics]";
-
+NSString *kFIRLoggerCrashlytics = @"[FirebaseCrashlytics]";
 NSString *const CrashlyticsMessageCode = @"I-CLS000000";
 
 void FIRCLSDebugLog(NSString *message, ...) {
   va_list args_ptr;
   va_start(args_ptr, message);
-  FIRLogBasic(FIRLoggerLevelDebug, kFIRLoggerCrashlytics, CrashlyticsMessageCode, message,
-              args_ptr);
+  NSLogv([NSString stringWithFormat:@"%@ DEBUG: %@", kFIRLoggerCrashlytics, message], args_ptr);
   va_end(args_ptr);
 }
 
 void FIRCLSInfoLog(NSString *message, ...) {
   va_list args_ptr;
   va_start(args_ptr, message);
-  FIRLogBasic(FIRLoggerLevelInfo, kFIRLoggerCrashlytics, CrashlyticsMessageCode, message, args_ptr);
+  NSLogv([NSString stringWithFormat:@"%@ INFO: %@", kFIRLoggerCrashlytics, message], args_ptr);
   va_end(args_ptr);
 }
 
 void FIRCLSWarningLog(NSString *message, ...) {
   va_list args_ptr;
   va_start(args_ptr, message);
-  FIRLogBasic(FIRLoggerLevelWarning, kFIRLoggerCrashlytics, CrashlyticsMessageCode, message,
-              args_ptr);
+  NSLogv([NSString stringWithFormat:@"%@ WARNING: %@", kFIRLoggerCrashlytics, message], args_ptr);
   va_end(args_ptr);
 }
 
 void FIRCLSErrorLog(NSString *message, ...) {
   va_list args_ptr;
   va_start(args_ptr, message);
-  FIRLogBasic(FIRLoggerLevelError, kFIRLoggerCrashlytics, CrashlyticsMessageCode, message,
-              args_ptr);
+  NSLogv([NSString stringWithFormat:@"%@ ERROR: %@", kFIRLoggerCrashlytics, message], args_ptr);
   va_end(args_ptr);
 }

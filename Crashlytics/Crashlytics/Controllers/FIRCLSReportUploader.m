@@ -12,10 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "Interop/Analytics/Public/FIRAnalyticsInterop.h"
 
 #import "Crashlytics/Crashlytics/Components/FIRCLSApplication.h"
-#import "Crashlytics/Crashlytics/Controllers/FIRCLSAnalyticsManager.h"
 #import "Crashlytics/Crashlytics/Controllers/FIRCLSManagerData.h"
 #import "Crashlytics/Crashlytics/Controllers/FIRCLSReportUploader_Private.h"
 #import "Crashlytics/Crashlytics/DataCollection/FIRCLSDataCollectionToken.h"
@@ -25,7 +23,6 @@
 #import "Crashlytics/Crashlytics/Models/FIRCLSInternalReport.h"
 #import "Crashlytics/Crashlytics/Models/FIRCLSSettings.h"
 #import "Crashlytics/Crashlytics/Models/FIRCLSSymbolResolver.h"
-#import "Crashlytics/Crashlytics/Models/Record/FIRCLSReportAdapter.h"
 #import "Crashlytics/Crashlytics/Operations/Reports/FIRCLSProcessReportOperation.h"
 
 #include "Crashlytics/Crashlytics/Helpers/FIRCLSUtility.h"
@@ -33,13 +30,8 @@
 #import "Crashlytics/Shared/FIRCLSConstants.h"
 #import "Crashlytics/Shared/FIRCLSNetworking/FIRCLSURLBuilder.h"
 
-#import <GoogleDataTransport/GoogleDataTransport.h>
 
-@interface FIRCLSReportUploader () {
-  id<FIRAnalyticsInterop> _analytics;
-}
-
-@property(nonatomic, strong) GDTCORTransport *googleTransport;
+@interface FIRCLSReportUploader ()
 @property(nonatomic, strong) FIRCLSInstallIdentifierModel *installIDModel;
 
 @property(nonatomic, readonly) NSString *googleAppID;
@@ -56,10 +48,8 @@
 
   _operationQueue = managerData.operationQueue;
   _googleAppID = managerData.googleAppID;
-  _googleTransport = managerData.googleTransport;
   _installIDModel = managerData.installIDModel;
   _fileManager = managerData.fileManager;
-  _analytics = managerData.analytics;
 
   return self;
 }
@@ -145,87 +135,14 @@
         FIRCLSInfoLog(@"[Firebase/Crashlytics] Packaged report with id '%@' for submission",
                       report.identifier);
 
-        [self uploadPackagedReportAtPath:packagedPath
-                     dataCollectionToken:dataCollectionToken
-                                asUrgent:urgent];
-
-        // We don't check for success here for 2 reasons:
-        //   1) If we can't upload a crash for whatever reason, but we can upload analytics
-        //      it's better for the customer to get accurate Crash Free Users.
-        //   2) In the past we did try to check for success, but it was a useless check because
-        //      sendDataEvent is async (unless we're sending urgently).
-        if (isCrash) {
-          [FIRCLSAnalyticsManager logCrashWithTimeStamp:report.crashedOnDate.timeIntervalSince1970
-                                            toAnalytics:self->_analytics];
-        }
+        // In a standalone crash reporter, the report is now sitting in the "prepared" folder.
+        // It is up to the host application to pick it up from here.
       });
 
   return;
 }
 
-/*
- * This code path can be repeated any number of times for a prepared crash report if
- * the report is failing to upload.
- *
- * Therefore, side effects (like logging to Analytics) should not go in this method or
- * else they will re-trigger when failures happen.
- *
- * When a crash report fails to upload, it will stay in the "prepared" folder. Upon next
- * run of the app, the ReportManager will attempt to re-upload prepared reports using this
- * method.
- */
-- (void)uploadPackagedReportAtPath:(NSString *)path
-               dataCollectionToken:(FIRCLSDataCollectionToken *)dataCollectionToken
-                          asUrgent:(BOOL)urgent {
-  FIRCLSDebugLog(@"Submitting report %@", urgent ? @"urgently" : @"async");
 
-  if (![dataCollectionToken isValid]) {
-    FIRCLSErrorLog(@"A report upload was requested with an invalid data collection token.");
-    return;
-  }
-
-  FIRCLSReportAdapter *adapter = [[FIRCLSReportAdapter alloc] initWithPath:path
-                                                               googleAppId:self.googleAppID
-                                                            installIDModel:self.installIDModel
-                                                                      fiid:self.fiid
-                                                                 authToken:self.authToken];
-
-  GDTCOREvent *event = [self.googleTransport eventForTransport];
-  event.dataObject = adapter;
-  event.qosTier = GDTCOREventQoSFast;  // Bypass batching, send immediately
-
-  dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-
-  [self.googleTransport
-      sendDataEvent:event
-         onComplete:^(BOOL wasWritten, NSError *error) {
-           if (!wasWritten) {
-             FIRCLSErrorLog(
-                 @"Failed to send crash report due to failure writing GoogleDataTransport event");
-             dispatch_semaphore_signal(semaphore);
-             return;
-           }
-
-           if (error) {
-             FIRCLSErrorLog(@"Failed to send crash report due to GoogleDataTransport error: %@",
-                            error.localizedDescription);
-             dispatch_semaphore_signal(semaphore);
-             return;
-           }
-
-           FIRCLSInfoLog(@"Completed report submission with id: %@", path.lastPathComponent);
-
-           if (urgent) {
-             dispatch_semaphore_signal(semaphore);
-           }
-
-           [self cleanUpSubmittedReportAtPath:path];
-         }];
-
-  if (urgent) {
-    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-  }
-}
 
 - (BOOL)cleanUpSubmittedReportAtPath:(NSString *)path {
   if (![[self fileManager] removeItemAtPath:path]) {

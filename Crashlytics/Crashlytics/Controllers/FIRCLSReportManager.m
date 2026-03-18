@@ -40,7 +40,6 @@
 
 #import "Crashlytics/Crashlytics/Components/FIRCLSApplication.h"
 #import "Crashlytics/Crashlytics/Components/FIRCLSUserLogging.h"
-#import "Crashlytics/Crashlytics/Controllers/FIRCLSAnalyticsManager.h"
 #import "Crashlytics/Crashlytics/Controllers/FIRCLSContextManager.h"
 #import "Crashlytics/Crashlytics/Controllers/FIRCLSExistingReportManager.h"
 #import "Crashlytics/Crashlytics/Controllers/FIRCLSManagerData.h"
@@ -99,8 +98,6 @@ typedef NSNumber FIRCLSWrappedReportAction;
   FIRCLSFileManager *_fileManager;
   dispatch_queue_t _dispatchQueue;
   NSOperationQueue *_operationQueue;
-  id<FIRAnalyticsInterop> _analytics;
-
   // A promise that will be resolved when unsent reports are found on the device, and
   // processReports: can be called to decide how to deal with them.
   FBLPromise<FIRCrashlyticsReport *> *_unsentReportsAvailable;
@@ -123,7 +120,6 @@ typedef NSNumber FIRCLSWrappedReportAction;
 }
 
 @property(nonatomic, readonly) NSString *googleAppID;
-@property(nonatomic, strong) GDTCORTransport *googleTransport;
 
 @property(nonatomic, strong) FIRCLSDataCollectionArbiter *dataArbiter;
 @property(nonatomic, strong) FIRCLSSettings *settings;
@@ -133,7 +129,6 @@ typedef NSNumber FIRCLSWrappedReportAction;
 @property(nonatomic, strong) FIRCLSInstallIdentifierModel *installIDModel;
 @property(nonatomic, strong) FIRCLSExecutionIdentifierModel *executionIDModel;
 
-@property(nonatomic, strong) FIRCLSAnalyticsManager *analyticsManager;
 @property(nonatomic, strong) FIRCLSExistingReportManager *existingReportManager;
 
 @property(nonatomic, strong) FIRCLSContextManager *contextManager;
@@ -150,18 +145,15 @@ typedef NSNumber FIRCLSWrappedReportAction;
 @implementation FIRCLSReportManager
 
 - (instancetype)initWithManagerData:(FIRCLSManagerData *)managerData
-              existingReportManager:(FIRCLSExistingReportManager *)existingReportManager
-                   analyticsManager:(FIRCLSAnalyticsManager *)analyticsManager {
+              existingReportManager:(FIRCLSExistingReportManager *)existingReportManager {
   self = [super init];
   if (!self) {
     return nil;
   }
 
   _fileManager = managerData.fileManager;
-  _analytics = managerData.analytics;
   _googleAppID = [managerData.googleAppID copy];
   _dataArbiter = managerData.dataArbiter;
-  _googleTransport = managerData.googleTransport;
   _operationQueue = managerData.operationQueue;
   _dispatchQueue = managerData.dispatchQueue;
   _appIDModel = managerData.appIDModel;
@@ -171,7 +163,6 @@ typedef NSNumber FIRCLSWrappedReportAction;
   _contextManager = managerData.contextManager;
 
   _existingReportManager = existingReportManager;
-  _analyticsManager = analyticsManager;
 
   _unsentReportsAvailable = [FBLPromise pendingPromise];
   _reportActionProvided = [FBLPromise pendingPromise];
@@ -433,8 +424,6 @@ typedef NSNumber FIRCLSWrappedReportAction;
                                           fileManager:_fileManager]
       then:^id _Nullable(id _Nullable value) {
         [self.notificationManager registerNotificationListener];
-
-        [self.analyticsManager registerAnalyticsListener];
 
         [self crashReportingSetupCompleted];
 

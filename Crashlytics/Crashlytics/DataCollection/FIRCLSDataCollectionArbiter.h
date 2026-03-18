@@ -14,7 +14,6 @@
 
 #import <Foundation/Foundation.h>
 
-@class FIRApp;
 @class FBLPromise<T>;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -23,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)init NS_UNAVAILABLE;
 
-- (instancetype)initWithApp:(FIRApp *)app withAppInfo:(NSDictionary *)dict;
+- (instancetype)initWithAppInfo:(NSDictionary *)dict;
 
 - (BOOL)isLegacyDataCollectionKeyInPlist;
 
