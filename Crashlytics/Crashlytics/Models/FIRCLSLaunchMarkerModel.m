@@ -38,7 +38,7 @@
 - (BOOL)checkForAndCreateLaunchMarker {
   BOOL launchFailure = [self launchFailureMarkerPresent];
   if (launchFailure) {
-    FIRCLSDeveloperLog("Crashlytics:Crash",
+    FIRCLSDeveloperLog("PendoCrashReporter:Crash",
                        @"Last launch failed: this may indicate a crash shortly after app launch.");
   } else {
     [self createLaunchFailureMarker];

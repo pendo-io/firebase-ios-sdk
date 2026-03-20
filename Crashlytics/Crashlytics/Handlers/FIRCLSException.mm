@@ -343,12 +343,12 @@ NSString *FIRCLSExceptionRecordOnDemand(FIRCLSExceptionType type,
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Winvalid-noreturn"
 void FIRCLSExceptionRaiseTestObjCException(void) {
-  [NSException raise:@"CrashlyticsTestException"
+  [NSException raise:@"PendoCrashReporterTestException"
               format:@"This is an Objective-C exception used for testing."];
 }
 
 void FIRCLSExceptionRaiseTestCppException(void) {
-  throw "Crashlytics C++ Test Exception";
+  throw "PendoCrashReporter C++ Test Exception";
 }
 #pragma clang diagnostic pop
 

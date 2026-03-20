@@ -73,7 +73,7 @@
   // This activity is still relevant using GoogleDataTransport because the on-device
   // symbolication operation may be computationally intensive.
   FIRCLSApplicationActivity(
-      FIRCLSApplicationActivityDefault, @"Crashlytics Crash Report Processing", ^{
+      FIRCLSApplicationActivityDefault, @"PendoCrashReporter Crash Report Processing", ^{
         
         // Run on-device symbolication before packaging if we should process
         if (shouldProcess) {
@@ -111,7 +111,7 @@
         NSString *packagedPath = [self.fileManager.preparedPath
             stringByAppendingPathComponent:report.path.lastPathComponent];
 
-        FIRCLSInfoLog(@"[Firebase/Crashlytics] Packaged report with id '%@' for submission",
+        FIRCLSInfoLog(@"[PendoCrashReporter] Packaged report with id '%@' for submission",
                       report.identifier);
 
         // Parse the report and notify the delegate

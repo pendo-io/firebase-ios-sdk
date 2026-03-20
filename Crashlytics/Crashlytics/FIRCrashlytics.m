@@ -98,13 +98,13 @@ static FIRCrashlytics *sharedInstance = nil;
   if (self) {
     bool expectedCalled = NO;
     if (!atomic_compare_exchange_strong(&_hasInitializedInstance, &expectedCalled, YES)) {
-      FIRCLSErrorLog(@"Cannot instantiate more than one instance of Crashlytics.");
+      FIRCLSErrorLog(@"Cannot instantiate more than one instance of PendoCrashReporter.");
       return nil;
     }
 
-    NSLog(@"[Crashlytics] Version %@", FIRCLSSDKVersion());
+    NSLog(@"[PendoCrashReporter] Version %@", FIRCLSSDKVersion());
 
-    FIRCLSDeveloperLog("Crashlytics", @"Running on %@, %@ (%@)", FIRCLSHostModelInfo(),
+    FIRCLSDeveloperLog("PendoCrashReporter", @"Running on %@, %@ (%@)", FIRCLSHostModelInfo(),
                        FIRCLSHostOSDisplayVersion(), FIRCLSHostOSBuildVersion());
 
     _fileManager = [[FIRCLSFileManager alloc] init];
@@ -231,7 +231,7 @@ static FIRCrashlytics *sharedInstance = nil;
 #pragma mark - Private Helpers
 - (void)waitForContextInit:(NSString *)contextLog callback:(void (^)(void))callback {
   if (!_isContextInitialized) {
-    FIRCLSErrorLog(@"Crashlytics method called before SDK was initialized: %@", contextLog);
+    FIRCLSErrorLog(@"PendoCrashReporter method called before SDK was initialized: %@", contextLog);
     return;
   }
   callback();

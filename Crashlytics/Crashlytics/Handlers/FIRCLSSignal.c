@@ -140,7 +140,7 @@ void FIRCLSSignalCheckHandlers(void) {
     }
 
     fprintf(stderr,
-            "[Crashlytics] The signal %s has a non-Crashlytics handler (%s).  This will interfere "
+            "[PendoCrashReporter] The signal %s has a non-PendoCrashReporter handler (%s).  This will interfere "
             "with reporting.\n",
             signalName, name);
   });

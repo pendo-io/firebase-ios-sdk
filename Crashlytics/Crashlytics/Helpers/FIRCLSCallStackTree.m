@@ -55,7 +55,7 @@
                                                                  options:0
                                                                    error:&error];
   if (error) {
-    NSLog(@"Crashlytics: error creating json");
+    NSLog(@"PendoCrashReporter: error creating json");
     return nil;
   }
   self = [super init];

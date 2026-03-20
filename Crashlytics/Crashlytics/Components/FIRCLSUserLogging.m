@@ -242,7 +242,7 @@ void FIRCLSUserLoggingRecordKeysAndValues(NSDictionary *keysAndValues,
                                           uint32_t *counter) {
   if (!FIRCLSContextIsInitialized()) {
     FIRCLSSDKLogWarn(
-        "Failed to write key/value pairs. Crashlytics context has not initialized yet.\n");
+        "Failed to write key/value pairs. PendoCrashReporter context has not initialized yet.\n");
     return;
   }
 
@@ -321,7 +321,7 @@ static void FIRCLSUserLoggingWriteKeysAndValues(NSDictionary *keysAndValues,
 NSArray *FIRCLSUserLoggingStoredKeyValues(const char *path) {
   if (!FIRCLSContextIsInitialized()) {
     FIRCLSSDKLogWarn(
-        "Failed to read key/value pairs. Crashlytics context has not initialized yet.\n");
+        "Failed to read key/value pairs. PendoCrashReporter context has not initialized yet.\n");
     return nil;
   }
 
@@ -399,7 +399,7 @@ void FIRCLSUserLoggingRecordError(NSError *error,
   }
 
   if (!FIRCLSContextIsInitialized()) {
-    FIRCLSSDKLogWarn("Failed to record error. Crashlytics context has not initialized yet.\n");
+    FIRCLSSDKLogWarn("Failed to record error. PendoCrashReporter context has not initialized yet.\n");
     return;
   }
 
@@ -588,7 +588,7 @@ void FIRCLSLogInternal(FIRCLSUserLoggingABStorage *storage,
 
   if (!FIRCLSContextIsInitialized()) {
     FIRCLSWarningLog(@"WARNING: FIRCLSLog has been used before (or concurrently with) "
-                     @"Crashlytics initialization and cannot be recorded. The message was: \n%@",
+                     @"PendoCrashReporter initialization and cannot be recorded. The message was: \n%@",
                      message);
     return;
   }
