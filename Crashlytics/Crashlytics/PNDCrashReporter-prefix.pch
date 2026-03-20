@@ -1,0 +1,6 @@
+#ifdef __OBJC__
+#import <Foundation/Foundation.h>
+#endif
+
+// Inject the namespace prefix into all files
+#import "PNDCrashReporter+Namespace.h"

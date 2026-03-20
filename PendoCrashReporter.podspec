@@ -1,5 +1,5 @@
 Pod::Spec.new do |s|
-  s.name             = 'FirebaseCrashlytics'
+  s.name             = 'PendoCrashReporter'
   s.version          = '12.11.0'
   s.summary          = 'Best and lightest-weight crash reporting for mobile, desktop and tvOS.'
   s.description      = 'Firebase Crashlytics helps you track, prioritize, and fix stability issues that erode app quality.'
@@ -24,7 +24,7 @@ Pod::Spec.new do |s|
   s.watchos.deployment_target = watchos_deployment_target
 
   s.cocoapods_version = '>= 1.12.0'
-  s.prefix_header_file = false
+  s.prefix_header_file = 'Crashlytics/Crashlytics/PNDCrashReporter-prefix.pch'
 
   s.source_files = [
     'Crashlytics/Crashlytics/**/*.{c,h,m,mm,swift}',
