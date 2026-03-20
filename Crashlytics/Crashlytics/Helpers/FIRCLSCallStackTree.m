@@ -15,6 +15,7 @@
 #import <Foundation/Foundation.h>
 
 #import "Crashlytics/Crashlytics/Helpers/FIRCLSCallStackTree.h"
+#import "Crashlytics/Crashlytics/Helpers/FIRCLSLogger.h"
 
 #if CLS_METRICKIT_SUPPORTED
 
