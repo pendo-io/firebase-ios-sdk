@@ -61,7 +61,7 @@
 - (NSArray *)activePathContents {
   NSMutableArray *pathsWithActive = [[NSMutableArray alloc] init];
   for (NSString *path in [_fileSystemDict allKeys]) {
-    if ([path containsString:@"v5/reports/active"]) {
+    if ([path containsString:@"reports/active"]) {
       [pathsWithActive addObject:path];
     }
   }

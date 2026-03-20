@@ -20,7 +20,6 @@
 #import "Crashlytics/Crashlytics/Models/FIRCLSInternalReport.h"
 
 NSString *const FIRCLSCacheDirectoryName = @"com.pendo.crashreporter.data";
-NSString *const FIRCLSCacheVersion = @"v5";
 NSString *const FIRCLSMetricKitDiagnosticPath = @"/MetricKit/Diagnostics/";
 
 @interface FIRCLSFileManager () {
@@ -203,17 +202,13 @@ NSString *const FIRCLSMetricKitDiagnosticPath = @"/MetricKit/Diagnostics/";
   return FIRCLSApplicationGetBundleIdentifier();
 }
 
-- (NSString *)versionedPath {
-  return [[self rootPath] stringByAppendingPathComponent:FIRCLSCacheVersion];
-}
-
 #pragma - Settings Paths
 
 // This path should be different than the structurePath because the
 // settings download operations will delete the settings directory,
 // which would delete crash reports if these were the same
 - (NSString *)settingsDirectoryPath {
-  return [[self versionedPath] stringByAppendingPathComponent:@"settings"];
+  return [[self rootPath] stringByAppendingPathComponent:@"settings"];
 }
 
 - (NSString *)settingsFilePath {
@@ -226,7 +221,7 @@ NSString *const FIRCLSMetricKitDiagnosticPath = @"/MetricKit/Diagnostics/";
 
 #pragma - Report Paths
 - (NSString *)structurePath {
-  return [[self versionedPath] stringByAppendingPathComponent:@"reports"];
+  return [[self rootPath] stringByAppendingPathComponent:@"reports"];
 }
 
 - (NSString *)activePath {
