@@ -19,7 +19,6 @@ NS_ASSUME_NONNULL_BEGIN
 @class FIRCLSManagerData;
 @class FIRCLSReportUploader;
 @class FIRCLSDataCollectionToken;
-@class FIRCrashlyticsReport;
 
 FOUNDATION_EXPORT NSUInteger const FIRCLSMaxUnsentReports;
 
@@ -43,13 +42,6 @@ FOUNDATION_EXPORT NSUInteger const FIRCLSMaxUnsentReports;
  */
 @property(nonatomic, readonly) NSUInteger unsentReportsCount;
 
-/**
- * This value needs to stay in sync with `numUnsentReports`, so if there is > 0 `numUnsentReports`,
- * `newestUnsentReport` needs to return a value. Otherwise it needs to return nil.
- *
- * `FIRCLSContext` needs to be initialized before the `CrashlyticsReport` is instantiated.
- */
-@property(nonatomic, readonly) FIRCrashlyticsReport *_Nullable newestUnsentReport;
 
 - (instancetype)initWithManagerData:(FIRCLSManagerData *)managerData
                      reportUploader:(FIRCLSReportUploader *)reportUploader;

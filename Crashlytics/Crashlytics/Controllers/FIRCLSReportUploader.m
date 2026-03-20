@@ -18,11 +18,13 @@
 #import "Crashlytics/Crashlytics/Controllers/FIRCLSReportUploader.h"
 #import "Crashlytics/Crashlytics/DataCollection/FIRCLSDataCollectionToken.h"
 #import "Crashlytics/Crashlytics/Helpers/FIRCLSDefines.h"
+#import "Crashlytics/Crashlytics/Helpers/FIRCLSFile.h"
 #import "Crashlytics/Crashlytics/Models/FIRCLSFileManager.h"
 #import "Crashlytics/Crashlytics/Models/FIRCLSInternalReport.h"
 #import "Crashlytics/Crashlytics/Models/FIRCLSSettings.h"
 #import "Crashlytics/Crashlytics/Models/FIRCLSSymbolResolver.h"
 #import "Crashlytics/Crashlytics/Operations/Reports/FIRCLSProcessReportOperation.h"
+#import "Crashlytics/Crashlytics/Public/FirebaseCrashlytics/FIRCrashlytics.h"
 
 #include "Crashlytics/Crashlytics/Helpers/FIRCLSUtility.h"
 
@@ -32,7 +34,7 @@
 
 @interface FIRCLSReportUploader ()
 
-@property(nonatomic, readonly) NSString *deviceID;
+- (NSDictionary *)parseCrashReportAtPath:(NSString *)path;
 
 @end
 
@@ -45,7 +47,6 @@
   }
 
   _operationQueue = managerData.operationQueue;
-  _deviceID = managerData.deviceID;
   _fileManager = managerData.fileManager;
 
   return self;
@@ -113,11 +114,112 @@
         FIRCLSInfoLog(@"[Firebase/Crashlytics] Packaged report with id '%@' for submission",
                       report.identifier);
 
+        // Parse the report and notify the delegate
+        NSDictionary *parsedReport = [self parseCrashReportAtPath:packagedPath];
+        id<PNDCrashReporterDelegate> delegate = [FIRCrashlytics crashlytics].delegate;
+        if ([delegate respondsToSelector:@selector(crashReporterDidDetectCrashReport:)]) {
+          dispatch_async(dispatch_get_main_queue(), ^{
+            [delegate crashReporterDidDetectCrashReport:parsedReport];
+          });
+        }
+
         // In a standalone crash reporter, the report is now sitting in the "prepared" folder.
-        // It is up to the host application to pick it up from here.
+        // We clean it up so it doesn't pile up.
+        [self cleanUpSubmittedReportAtPath:packagedPath];
       });
 
   return;
+}
+
+- (NSDictionary *)parseCrashReportAtPath:(NSString *)path {
+  NSMutableDictionary *reportDict = [NSMutableDictionary dictionary];
+  
+  NSFileManager *fileManager = [NSFileManager defaultManager];
+  NSArray *files = [fileManager contentsOfDirectoryAtPath:path error:nil];
+  
+  for (NSString *filename in files) {
+    if (![filename hasSuffix:@".clsrecord"]) {
+      continue;
+    }
+    
+    // Ignore log files entirely as requested
+    if ([filename containsString:@"log"]) {
+      continue;
+    }
+    
+    NSString *fullPath = [path stringByAppendingPathComponent:filename];
+    NSString *key = [filename stringByDeletingPathExtension];
+    
+    BOOL isKVFile = [filename containsString:@"kv"];
+    NSMutableDictionary *fileDict = [NSMutableDictionary dictionary];
+    
+    NSArray *sections = FIRCLSFileReadSections([fullPath UTF8String], NO, ^NSObject *(id obj) {
+      if (![obj isKindOfClass:[NSDictionary class]]) {
+        return obj;
+      }
+      NSMutableDictionary *dict = [(NSDictionary *)obj mutableCopy];
+      
+      // Decode errors (domain and userInfo can contain arbitrary strings, so they use hex)
+      if (dict[@"error"]) {
+        NSMutableDictionary *err = [dict[@"error"] mutableCopy];
+        if (err[@"domain"]) err[@"domain"] = FIRCLSFileHexDecodeString([err[@"domain"] UTF8String]) ?: err[@"domain"];
+        
+        for (NSString *infoKey in @[@"info", @"extra_info"]) {
+          if (err[infoKey] && [err[infoKey] isKindOfClass:[NSArray class]]) {
+            NSMutableArray *newInfo = [NSMutableArray array];
+            for (id item in err[infoKey]) {
+              if ([item isKindOfClass:[NSArray class]] && [item count] == 2) {
+                NSString *k = FIRCLSFileHexDecodeString([item[0] UTF8String]) ?: item[0];
+                NSString *v = FIRCLSFileHexDecodeString([item[1] UTF8String]) ?: item[1];
+                [newInfo addObject:@[k, v]];
+              } else {
+                [newInfo addObject:item];
+              }
+            }
+            err[infoKey] = newInfo;
+          }
+        }
+        dict[@"error"] = err;
+      }
+      
+      return dict;
+    });
+    
+    if (sections) {
+      if (isKVFile) {
+        // Flatten KV arrays into a direct key-value dictionary
+        for (NSDictionary *section in sections) {
+          NSDictionary *kv = section[@"kv"];
+          if (kv && kv[@"key"] && kv[@"value"] && ![kv[@"value"] isEqual:[NSNull null]]) {
+            fileDict[kv[@"key"]] = kv[@"value"];
+          }
+        }
+      } else {
+        // Merge JSON-Lines into a single dictionary of dictionaries.
+        // If a root key (like "exception" or "thread") appears multiple times, group them into an array.
+        for (NSDictionary *section in sections) {
+          for (NSString *sectionKey in section) {
+            id sectionValue = section[sectionKey];
+            id existingValue = fileDict[sectionKey];
+            
+            if (existingValue) {
+              if ([existingValue isKindOfClass:[NSMutableArray class]]) {
+                [(NSMutableArray *)existingValue addObject:sectionValue];
+              } else {
+                fileDict[sectionKey] = [@[existingValue, sectionValue] mutableCopy];
+              }
+            } else {
+              fileDict[sectionKey] = sectionValue;
+            }
+          }
+        }
+      }
+      
+      [reportDict setObject:fileDict forKey:key];
+    }
+  }
+  
+  return [reportDict copy];
 }
 
 

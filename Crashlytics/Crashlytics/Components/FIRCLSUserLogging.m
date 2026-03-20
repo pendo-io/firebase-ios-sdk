@@ -305,7 +305,8 @@ static void FIRCLSUserLoggingWriteKeysAndValues(NSDictionary *keysAndValues,
     return;
   }
 
-  FIRCLSUserLoggingWriteKVEntriesToFile(keysAndValues, true, &file);
+  // Changed to false to write plain text strings instead of hex encoding
+  FIRCLSUserLoggingWriteKVEntriesToFile(keysAndValues, false, &file);
   FIRCLSFileClose(&file);
 
   *counter += keysAndValues.count;

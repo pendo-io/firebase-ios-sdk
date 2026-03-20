@@ -70,8 +70,8 @@ static atomic_bool _hasInitializedInstance;
 @interface FIRCrashlytics ()
 
 @property(nonatomic) BOOL didPreviouslyCrash;
-@property(nonatomic, copy) NSString *deviceID;
 @property(nonatomic) FIRCLSFileManager *fileManager;
+@property(nonatomic, weak) id<PNDCrashReporterDelegate> delegate;
 
 @property(nonatomic) FIRCLSReportManager *reportManager;
 
@@ -92,7 +92,7 @@ static FIRCrashlytics *sharedInstance = nil;
 
 #pragma mark - Singleton Support
 
-- (instancetype)initWithDeviceID:(NSString *)deviceID {
+- (instancetype)init {
   self = [super init];
 
   if (self) {
@@ -108,14 +108,12 @@ static FIRCrashlytics *sharedInstance = nil;
                        FIRCLSHostOSDisplayVersion(), FIRCLSHostOSBuildVersion());
 
     _fileManager = [[FIRCLSFileManager alloc] init];
-    _deviceID = [deviceID copy];
 
     FIRCLSSettings *settings = [[FIRCLSSettings alloc] init];
 
     FIRCLSOnDemandModel *onDemandModel =
         [[FIRCLSOnDemandModel alloc] initWithFIRCLSSettings:settings fileManager:_fileManager];
-    _managerData = [[FIRCLSManagerData alloc] initWithDeviceID:_deviceID
-                                                      fileManager:_fileManager
+    _managerData = [[FIRCLSManagerData alloc] initWithFileManager:_fileManager
                                                          settings:settings
                                                     onDemandModel:onDemandModel];
 
@@ -148,17 +146,18 @@ static FIRCrashlytics *sharedInstance = nil;
   return self;
 }
 
-+ (instancetype)startWithDeviceID:(NSString *)deviceID {
++ (instancetype)startMonitoringWithDelegate:(id<PNDCrashReporterDelegate>)delegate {
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-    sharedInstance = [[FIRCrashlytics alloc] initWithDeviceID:deviceID];
+    sharedInstance = [[FIRCrashlytics alloc] init];
+    sharedInstance.delegate = delegate;
   });
   return sharedInstance;
 }
 
 + (instancetype)crashlytics {
   if (!sharedInstance) {
-    FIRCLSErrorLog(@"[FIRCrashlytics startWithDeviceID:] must be called first.");
+    FIRCLSErrorLog(@"[FIRCrashlytics startMonitoringWithDelegate:] must be called first.");
   }
   return sharedInstance;
 }
@@ -191,108 +190,13 @@ static FIRCrashlytics *sharedInstance = nil;
   }
 }
 
-#pragma mark - API: Logging
-- (void)log:(NSString *)msg {
-  [self waitForContextInit:@"log"
-                  callback:^{
-                    FIRCLSLog(@"%@", msg);
-                  }];
-}
+#pragma mark - API: Custom Data
 
-- (void)logWithFormat:(NSString *)format, ... {
-  va_list args;
-  va_start(args, format);
-  [self logWithFormat:format arguments:args];
-  va_end(args);
-}
-
-- (void)logWithFormat:(NSString *)format arguments:(va_list)args {
-  [self log:[[NSString alloc] initWithFormat:format arguments:args]];
-}
-
-#pragma mark - API: Accessors
-
-- (void)checkForUnsentReportsWithCompletion:(void (^)(BOOL))completion {
-  FIRCrashlyticsReport *report = [self.reportManager checkForUnsentReports];
-  completion(report ? YES : NO);
-}
-
-- (void)checkAndUpdateUnsentReportsWithCompletion:
-    (void (^)(FIRCrashlyticsReport *_Nonnull))completion {
-  FIRCrashlyticsReport *report = [self.reportManager checkForUnsentReports];
-  completion(report);
-}
-
-- (void)sendUnsentReports {
-  [self.reportManager sendUnsentReports];
-}
-
-- (void)deleteUnsentReports {
-  [self.reportManager deleteUnsentReports];
-}
-
-#pragma mark - API: setUserID
-- (void)setUserID:(nullable NSString *)userID {
-  [self waitForContextInit:@"setUserID"
-                  callback:^{
-                    FIRCLSUserLoggingRecordInternalKeyValue(FIRCLSUserIdentifierKey, userID);
-                  }];
-}
-
-#pragma mark - API: setCustomValue
-
-- (void)setCustomValue:(nullable id)value forKey:(NSString *)key {
-  [self waitForContextInit:@"setCustomValue"
-                  callback:^{
-                    FIRCLSUserLoggingRecordUserKeyValue(key, value);
-                  }];
-}
-
-- (void)setCustomKeysAndValues:(NSDictionary *)keysAndValues {
-  [self waitForContextInit:@"setCustomKeysAndValues"
-                  callback:^{
-                    FIRCLSUserLoggingRecordUserKeysAndValues(keysAndValues);
-                  }];
-}
-
-#pragma mark - API: Development Platform
-// These two methods are deprecated by our own API, so
-// its ok to implement them
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-implementations"
-+ (void)setDevelopmentPlatformName:(NSString *)name {
-  [[self crashlytics] setDevelopmentPlatformName:name];
-}
-
-+ (void)setDevelopmentPlatformVersion:(NSString *)version {
-  [[self crashlytics] setDevelopmentPlatformVersion:version];
-}
-#pragma clang diagnostic pop
-
-- (NSString *)developmentPlatformName {
-  FIRCLSErrorLog(@"developmentPlatformName is write-only");
-  return nil;
-}
-
-- (void)setDevelopmentPlatformName:(NSString *)developmentPlatformName {
-  [self waitForContextInit:developmentPlatformName
-                  callback:^{
-                    FIRCLSUserLoggingRecordInternalKeyValue(FIRCLSDevelopmentPlatformNameKey,
-                                                            developmentPlatformName);
-                  }];
-}
-
-- (NSString *)developmentPlatformVersion {
-  FIRCLSErrorLog(@"developmentPlatformVersion is write-only");
-  return nil;
-}
-
-- (void)setDevelopmentPlatformVersion:(NSString *)developmentPlatformVersion {
-  [self waitForContextInit:developmentPlatformVersion
-                  callback:^{
-                    FIRCLSUserLoggingRecordInternalKeyValue(FIRCLSDevelopmentPlatformVersionKey,
-                                                            developmentPlatformVersion);
-                  }];
++ (void)updateCustomData:(NSDictionary<NSString *, NSString *> *)customData {
+  [[self crashlytics] waitForContextInit:@"updateCustomData"
+                                callback:^{
+                                  FIRCLSUserLoggingRecordUserKeysAndValues(customData);
+                                }];
 }
 
 #pragma mark - API: Errors and Exceptions

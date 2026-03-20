@@ -36,20 +36,14 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface FIRCLSManagerData : NSObject
 
-- (instancetype)initWithDeviceID:(NSString *)deviceID
-                     fileManager:(FIRCLSFileManager *)fileManager
+- (instancetype)initWithFileManager:(FIRCLSFileManager *)fileManager
                         settings:(FIRCLSSettings *)settings
                    onDemandModel:(FIRCLSOnDemandModel *)onDemandModel NS_DESIGNATED_INITIALIZER;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
-@property(nonatomic, readonly) NSString *deviceID;
-
 @property(nonatomic, strong) FIRCLSFileManager *fileManager;
-
-// Uniquely identifies an install of the app
-@property(nonatomic, strong) NSString *installID;
 
 // Uniquely identifies a run of the app
 @property(nonatomic, strong) FIRCLSExecutionIdentifierModel *executionIDModel;

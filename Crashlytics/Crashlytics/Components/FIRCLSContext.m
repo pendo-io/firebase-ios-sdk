@@ -117,14 +117,6 @@ void FIRCLSContextInitialize(FIRCLSContextInitData* initData,
     _firclsContext.readonly->logging.errorStorage.bPath =
         FIRCLSContextAppendToRoot(rootPath, FIRCLSReportErrorBFile);
 
-    _firclsContext.readonly->logging.logStorage.maxSize = initData.maxLogSize;
-    _firclsContext.readonly->logging.logStorage.maxEntries = 0;
-    _firclsContext.readonly->logging.logStorage.restrictBySize = true;
-    _firclsContext.readonly->logging.logStorage.entryCount = NULL;
-    _firclsContext.readonly->logging.logStorage.aPath =
-        FIRCLSContextAppendToRoot(rootPath, FIRCLSReportLogAFile);
-    _firclsContext.readonly->logging.logStorage.bPath =
-        FIRCLSContextAppendToRoot(rootPath, FIRCLSReportLogBFile);
     _firclsContext.readonly->logging.customExceptionStorage.aPath =
         FIRCLSContextAppendToRoot(rootPath, FIRCLSReportCustomExceptionAFile);
     _firclsContext.readonly->logging.customExceptionStorage.bPath =

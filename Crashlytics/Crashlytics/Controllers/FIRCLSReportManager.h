@@ -32,7 +32,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (BOOL)startWithProfiling;
 
-- (FIRCrashlyticsReport *)checkForUnsentReports;
 - (void)sendUnsentReports;
 - (void)deleteUnsentReports;
 

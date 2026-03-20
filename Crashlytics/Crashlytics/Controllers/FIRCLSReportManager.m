@@ -53,12 +53,9 @@
   atomic_bool _checkForUnsentReportsCalled;
 }
 
-@property(nonatomic, readonly) NSString *deviceID;
-
 @property(nonatomic, strong) FIRCLSSettings *settings;
 @property(nonatomic, strong) FIRCLSLaunchMarkerModel *launchMarker;
 
-@property(nonatomic, strong) NSString *installID;
 @property(nonatomic, strong) FIRCLSExecutionIdentifierModel *executionIDModel;
 
 @property(nonatomic, strong) FIRCLSExistingReportManager *existingReportManager;
@@ -79,10 +76,8 @@
   }
 
   _fileManager = managerData.fileManager;
-  _deviceID = [managerData.deviceID copy];
   _operationQueue = managerData.operationQueue;
   _dispatchQueue = managerData.dispatchQueue;
-  _installID = managerData.installID;
   _settings = managerData.settings;
   _executionIDModel = managerData.executionIDModel;
   _contextManager = managerData.contextManager;
@@ -99,24 +94,6 @@
   return self;
 }
 
-- (FIRCrashlyticsReport *)checkForUnsentReports {
-  bool expectedCalled = NO;
-  if (!atomic_compare_exchange_strong(&_checkForUnsentReportsCalled, &expectedCalled, YES)) {
-    FIRCLSErrorLog(@"Either checkForUnsentReports or checkAndUpdateUnsentReports should be called "
-                   @"once per execution.");
-    return nil;
-  }
-  return self.existingReportManager.newestUnsentReport;
-}
-
-- (void)sendUnsentReports {
-  FIRCLSDataCollectionToken *dataCollectionToken = [FIRCLSDataCollectionToken validToken];
-  [self beginReportUploadsWithToken:dataCollectionToken blockingSend:NO];
-}
-
-- (void)deleteUnsentReports {
-  [self.existingReportManager deleteUnsentReports];
-}
 
 - (BOOL)startWithProfiling {
   NSString *executionIdentifier = self.executionIDModel.executionID;

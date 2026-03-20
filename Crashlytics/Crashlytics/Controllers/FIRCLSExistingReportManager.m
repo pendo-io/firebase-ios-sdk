@@ -22,8 +22,6 @@
 #import "Crashlytics/Crashlytics/Models/FIRCLSInternalReport.h"
 #import "Crashlytics/Crashlytics/Models/FIRCLSSettings.h"
 #import "Crashlytics/Crashlytics/Private/FIRCLSOnDemandModel_Private.h"
-#import "Crashlytics/Crashlytics/Private/FIRCrashlyticsReport_Private.h"
-#import "Crashlytics/Crashlytics/Public/FirebaseCrashlytics/FIRCrashlyticsReport.h"
 
 // This value should stay in sync with the Android SDK
 NSUInteger const FIRCLSMaxUnsentReports = 4;
@@ -78,13 +76,6 @@ NSInteger compareNewer(FIRCLSInternalReport *reportA,
   self.preparedReportPaths = self.fileManager.preparedPathContents;
 }
 
-- (FIRCrashlyticsReport *)newestUnsentReport {
-  if (self.unsentReportsCount <= 0) {
-    return nil;
-  }
-
-  return [[FIRCrashlyticsReport alloc] initWithInternalReport:self.newestInternalReport];
-}
 
 - (NSUInteger)unsentReportsCount {
   // There are nuances about why we only count active reports.

@@ -6,7 +6,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Initialize standalone Crashlytics
-    [FIRCrashlytics startWithDeviceID:@"pendo-test-device-id"];
+    [FIRCrashlytics startMonitoringWithDelegate:nil];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor whiteColor];

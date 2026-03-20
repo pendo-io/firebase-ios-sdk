@@ -22,8 +22,7 @@
 
 @implementation FIRCLSManagerData
 
-- (instancetype)initWithDeviceID:(NSString *)deviceID
-                     fileManager:(FIRCLSFileManager *)fileManager
+- (instancetype)initWithFileManager:(FIRCLSFileManager *)fileManager
                         settings:(FIRCLSSettings *)settings
                    onDemandModel:(FIRCLSOnDemandModel *)onDemandModel {
   self = [super init];
@@ -31,13 +30,11 @@
     return nil;
   }
 
-  _deviceID = deviceID;
   _fileManager = fileManager;
   _settings = settings;
   _onDemandModel = onDemandModel;
   _contextManager = [[FIRCLSContextManager alloc] init];
 
-  _installID = deviceID;
   _executionIDModel = [[FIRCLSExecutionIdentifierModel alloc] init];
 
   NSString *sdkBundleID = FIRCLSApplicationGetSDKBundleID();
