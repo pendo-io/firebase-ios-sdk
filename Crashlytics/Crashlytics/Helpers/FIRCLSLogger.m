@@ -14,7 +14,7 @@
 
 #import "Crashlytics/Crashlytics/Helpers/FIRCLSLogger.h"
 
-NSString *kFIRLoggerCrashlytics = @"[FirebaseCrashlytics]";
+NSString *kFIRLoggerCrashlytics = @"[PendoCrashReporter]";
 NSString *const CrashlyticsMessageCode = @"I-CLS000000";
 
 void FIRCLSDebugLog(NSString *message, ...) {

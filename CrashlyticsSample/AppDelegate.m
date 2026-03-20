@@ -1,5 +1,6 @@
 #import "AppDelegate.h"
 #import "CrashHelpers.h"
+#import "Firebase/Firebase.h"
 
 // We won't import the real Firebase headers directly to avoid requiring GoogleService-Info.plist,
 // but we will verify both classes exist at runtime via NSClassFromString to prove they are both linked without collision.
