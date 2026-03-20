@@ -19,7 +19,7 @@
 #import "Crashlytics/Crashlytics/Helpers/FIRCLSLogger.h"
 #import "Crashlytics/Crashlytics/Models/FIRCLSInternalReport.h"
 
-NSString *const FIRCLSCacheDirectoryName = @"com.crashlytics.data";
+NSString *const FIRCLSCacheDirectoryName = @"com.pendo.crashreporter.data";
 NSString *const FIRCLSCacheVersion = @"v5";
 NSString *const FIRCLSMetricKitDiagnosticPath = @"/MetricKit/Diagnostics/";
 

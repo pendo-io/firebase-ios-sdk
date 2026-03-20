@@ -35,7 +35,7 @@
   _internalFinished = NO;
 
   self.lock = [[NSRecursiveLock alloc] init];
-  self.lock.name = @"com.crashlytics.async-operation-lock";
+  self.lock.name = @"com.pendo.crashreporter.async-operation-lock";
 
   return self;
 }

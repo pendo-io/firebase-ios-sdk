@@ -21,21 +21,21 @@
 
 #import "Crashlytics/Crashlytics/Controllers/FIRCLSReportManager_Private.h"
 
-NSString *const FIRCLSStartTimeKey = @"com.crashlytics.kit-start-time";
-NSString *const FIRCLSFirstRunloopTurnTimeKey = @"com.crashlytics.first-run-loop-time";
-NSString *const FIRCLSInBackgroundKey = @"com.crashlytics.in-background";
+NSString *const FIRCLSStartTimeKey = @"kit-start-time";
+NSString *const FIRCLSFirstRunloopTurnTimeKey = @"first-run-loop-time";
+NSString *const FIRCLSInBackgroundKey = @"in-background";
 #if TARGET_OS_IPHONE
-NSString *const FIRCLSDeviceOrientationKey = @"com.crashlytics.device-orientation";
-NSString *const FIRCLSUIOrientationKey = @"com.crashlytics.ui-orientation";
+NSString *const FIRCLSDeviceOrientationKey = @"device-orientation";
+NSString *const FIRCLSUIOrientationKey = @"ui-orientation";
 #endif
-NSString *const FIRCLSUserIdentifierKey = @"com.crashlytics.user-id";
-NSString *const FIRCLSDevelopmentPlatformNameKey = @"com.crashlytics.development-platform-name";
+NSString *const FIRCLSUserIdentifierKey = @"user-id";
+NSString *const FIRCLSDevelopmentPlatformNameKey = @"development-platform-name";
 NSString *const FIRCLSDevelopmentPlatformVersionKey =
-    @"com.crashlytics.development-platform-version";
+    @"development-platform-version";
 NSString *const FIRCLSOnDemandRecordedExceptionsKey =
-    @"com.crashlytics.on-demand.recorded-exceptions";
+    @"on-demand.recorded-exceptions";
 NSString *const FIRCLSOnDemandDroppedExceptionsKey =
-    @"com.crashlytics.on-demand.dropped-exceptions";
+    @"on-demand.dropped-exceptions";
 
 // Empty string object synchronized on to prevent a race condition when accessing AB file path
 NSString *const FIRCLSSynchronizedPathKey = @"";
