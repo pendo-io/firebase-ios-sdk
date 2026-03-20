@@ -16,6 +16,8 @@
 
 __BEGIN_DECLS
 
+extern BOOL PNDCrashReporterIsDebugMode;
+
 void FIRCLSDebugLog(NSString *message, ...);
 void FIRCLSInfoLog(NSString *message, ...);
 void FIRCLSWarningLog(NSString *message, ...);

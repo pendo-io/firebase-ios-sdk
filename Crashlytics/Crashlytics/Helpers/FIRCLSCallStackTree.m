@@ -55,7 +55,7 @@
                                                                  options:0
                                                                    error:&error];
   if (error) {
-    NSLog(@"PendoCrashReporter: error creating json");
+    FIRCLSErrorLog(@"PendoCrashReporter: error creating json");
     return nil;
   }
   self = [super init];

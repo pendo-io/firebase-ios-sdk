@@ -1,28 +1,14 @@
 #import "AppDelegate.h"
 #import "CrashHelpers.h"
-#import "Firebase/Firebase.h"
-
-// We won't import the real Firebase headers directly to avoid requiring GoogleService-Info.plist,
-// but we will verify both classes exist at runtime via NSClassFromString to prove they are both linked without collision.
+#import <PendoCrashReporter/FIRCrashlytics.h>
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
-    Class pendoCrashlyticsClass = NSClassFromString(@"PND_FIRCrashlytics");
-    Class realCrashlyticsClass = NSClassFromString(@"FIRCrashlytics");
-    
-    NSLog(@"Pendo Crashlytics Class: %@", pendoCrashlyticsClass);
-    NSLog(@"Real Firebase Crashlytics Class: %@", realCrashlyticsClass);
-    
-    if (pendoCrashlyticsClass) {
-        // Start our standalone version
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-        [pendoCrashlyticsClass performSelector:NSSelectorFromString(@"startMonitoringWithDelegate:") withObject:nil];
-#pragma clang diagnostic pop
-        NSLog(@"Successfully started Pendo Crash Reporter.");
-    }
+    // Start our standalone version with debug mode enabled so we can see the internal logs during development/testing
+    [FIRCrashlytics startMonitoringWithDelegate:nil debugMode:YES];
+    NSLog(@"Successfully started Pendo Crash Reporter.");
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor whiteColor];

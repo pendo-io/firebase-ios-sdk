@@ -72,13 +72,15 @@ NS_SWIFT_NAME(Crashlytics)
             @property(nonatomic, weak, readonly) id<PNDCrashReporterDelegate> delegate;
 
 /**
- * Initializes and accesses the singleton Crashlytics instance and sets the delegate for Phase 2.
+ * Initializes and accesses the singleton PendoCrashReporter instance and sets the delegate for Phase 2.
  *
- * @param deviceID The device ID used to identify the installation.
  * @param delegate The delegate to receive parsed crash reports.
+ * @param debugMode If YES, internal debug logs will be printed to the console.
  * @return The singleton Crashlytics instance.
  */
-+ (instancetype)startMonitoringWithDelegate:(nullable id<PNDCrashReporterDelegate>)delegate NS_SWIFT_NAME(startMonitoring(delegate:));
++ (instancetype)startMonitoringWithDelegate:(nullable id<PNDCrashReporterDelegate>)delegate
+                                  debugMode:(BOOL)debugMode
+    NS_SWIFT_NAME(startMonitoring(delegate:debugMode:));
 
 /**
  * Accesses the singleton Crashlytics instance.

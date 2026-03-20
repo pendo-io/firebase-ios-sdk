@@ -15,8 +15,10 @@
 #import "Crashlytics/Crashlytics/Helpers/FIRCLSLogger.h"
 
 NSString *kFIRLoggerCrashlytics = @"[PendoCrashReporter]";
+BOOL PNDCrashReporterIsDebugMode = NO;
 
 void FIRCLSDebugLog(NSString *message, ...) {
+  if (!PNDCrashReporterIsDebugMode) return;
   va_list args_ptr;
   va_start(args_ptr, message);
   NSLogv([NSString stringWithFormat:@"%@ DEBUG: %@", kFIRLoggerCrashlytics, message], args_ptr);
@@ -24,6 +26,7 @@ void FIRCLSDebugLog(NSString *message, ...) {
 }
 
 void FIRCLSInfoLog(NSString *message, ...) {
+  if (!PNDCrashReporterIsDebugMode) return;
   va_list args_ptr;
   va_start(args_ptr, message);
   NSLogv([NSString stringWithFormat:@"%@ INFO: %@", kFIRLoggerCrashlytics, message], args_ptr);
@@ -31,6 +34,7 @@ void FIRCLSInfoLog(NSString *message, ...) {
 }
 
 void FIRCLSWarningLog(NSString *message, ...) {
+  if (!PNDCrashReporterIsDebugMode) return;
   va_list args_ptr;
   va_start(args_ptr, message);
   NSLogv([NSString stringWithFormat:@"%@ WARNING: %@", kFIRLoggerCrashlytics, message], args_ptr);
@@ -38,6 +42,7 @@ void FIRCLSWarningLog(NSString *message, ...) {
 }
 
 void FIRCLSErrorLog(NSString *message, ...) {
+  if (!PNDCrashReporterIsDebugMode) return;
   va_list args_ptr;
   va_start(args_ptr, message);
   NSLogv([NSString stringWithFormat:@"%@ ERROR: %@", kFIRLoggerCrashlytics, message], args_ptr);

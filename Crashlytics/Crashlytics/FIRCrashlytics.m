@@ -102,7 +102,7 @@ static FIRCrashlytics *sharedInstance = nil;
       return nil;
     }
 
-    NSLog(@"[PendoCrashReporter] Version %@", FIRCLSSDKVersion());
+    FIRCLSDebugLog(@"Version %@", FIRCLSSDKVersion());
 
     FIRCLSDeveloperLog("PendoCrashReporter", @"Running on %@, %@ (%@)", FIRCLSHostModelInfo(),
                        FIRCLSHostOSDisplayVersion(), FIRCLSHostOSBuildVersion());
@@ -146,9 +146,11 @@ static FIRCrashlytics *sharedInstance = nil;
   return self;
 }
 
-+ (instancetype)startMonitoringWithDelegate:(id<PNDCrashReporterDelegate>)delegate {
++ (instancetype)startMonitoringWithDelegate:(id<PNDCrashReporterDelegate>)delegate
+                                  debugMode:(BOOL)debugMode {
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
+    PNDCrashReporterIsDebugMode = debugMode;
     sharedInstance = [[FIRCrashlytics alloc] init];
     sharedInstance.delegate = delegate;
   });

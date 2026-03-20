@@ -3,5 +3,4 @@ use_frameworks!
 
 target 'CrashlyticsSample' do
   pod 'PendoCrashReporter', :path => '../'
-  pod 'Firebase/Crashlytics'
 end
