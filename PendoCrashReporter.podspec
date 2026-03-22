@@ -27,7 +27,8 @@ Pod::Spec.new do |s|
   ]
 
   s.public_header_files = [
-    'Crashlytics/Crashlytics/Public/FirebaseCrashlytics/PendoCrashReporter.h'
+    'Crashlytics/Crashlytics/Public/FirebaseCrashlytics/PendoCrashReporter.h',
+    'Crashlytics/Crashlytics/Public/FirebaseCrashlytics/PNDCrashReporter+Namespace.h'
   ]
 
   s.libraries = 'c++', 'z'
