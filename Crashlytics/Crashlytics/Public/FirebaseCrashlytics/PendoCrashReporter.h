@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#import "PNDCrashReporter+Namespace.h"
 #import "FIRCrashlytics.h"
 #import "FIRExceptionModel.h"
 #import "FIRStackFrame.h"

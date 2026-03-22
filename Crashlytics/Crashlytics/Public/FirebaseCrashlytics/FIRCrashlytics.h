@@ -14,7 +14,6 @@
 
 #import <Foundation/Foundation.h>
 
-#import "PNDCrashReporter+Namespace.h"
 #import "FIRExceptionModel.h"
 
 #if __has_include(<Crashlytics/Crashlytics.h>)
