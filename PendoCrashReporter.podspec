@@ -30,15 +30,7 @@ Pod::Spec.new do |s|
     'Crashlytics/Crashlytics/Public/FirebaseCrashlytics/PendoCrashReporter.h'
   ]
 
-  s.preserve_paths = [
-    'Crashlytics/README.md',
-    'run',
-    'upload-symbols',
-    'CrashlyticsInputFiles.xcfilelist',
-  ]
-
   s.libraries = 'c++', 'z'
-  s.ios.frameworks = 'Security', 'SystemConfiguration'
 
   s.ios.pod_target_xcconfig = {
     'GCC_PREPROCESSOR_DEFINITIONS' =>

@@ -5,6 +5,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface CrashHelpers : NSObject
 
 + (void)throwCPPException;
++ (void)callTerminate;
 
 @end
 

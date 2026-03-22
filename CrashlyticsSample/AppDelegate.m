@@ -60,6 +60,11 @@
                          action:@selector(triggerCPPException)];
                          
     [self addCrashButtonToStack:stackView
+                          title:@"4b. C++ std::terminate"
+                    description:@"Cause: Directly calling std::terminate().\nCaught by: C++ terminate handler (FIRCLSException)."
+                         action:@selector(triggerCPPTerminate)];
+                         
+    [self addCrashButtonToStack:stackView
                           title:@"5. EXC_BAD_ACCESS (NULL Pointer)"
                     description:@"Cause: Dereferencing a NULL or invalid pointer.\nCaught by: Mach Exception (EXC_BAD_ACCESS) or POSIX (SIGSEGV)."
                          action:@selector(triggerBadAccess)];
@@ -163,6 +168,11 @@
 - (void)triggerCPPException {
     NSLog(@"Triggering C++ std::runtime_error...");
     [CrashHelpers throwCPPException];
+}
+
+- (void)triggerCPPTerminate {
+    NSLog(@"Triggering C++ std::terminate...");
+    [CrashHelpers callTerminate];
 }
 
 - (void)triggerBadAccess {
