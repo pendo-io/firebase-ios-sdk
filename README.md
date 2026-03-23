@@ -16,6 +16,7 @@ This repository is a stripped-down fork of the [Firebase iOS SDK](https://github
 - **Removed Firebase Core Dependency**: Removed initialization ties to `FIRApp`, allowing standalone initialization.
 - **Removed Extraneous Modules**: Stripped Analytics, Performance, Messaging, FBLPromises, nanopb, and other unneeded Firebase products.
 - **Custom Delegate Implementation**: Added `PNDCrashReporterDelegate` to provide Phase 2 report parsing directly to the Pendo SDK.
+- **Symbol Collision Prevention**: Implemented a macro-based prefixing system (`PNDCrashReporter+Namespace.h`) that renames all underlying `FIR*` classes, structs, and constants to `PND_FIR*` at compile time. This ensures that an app containing both the Pendo SDK and the full Firebase SDK will not encounter duplicate symbol linker errors or undefined runtime behavior.
 
 ## Installation via CocoaPods
 
