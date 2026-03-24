@@ -24,8 +24,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy) NSString* rootPath;
 @property(nonatomic, copy) NSString* previouslyCrashedFileRootPath;
 @property(nonatomic, copy) NSString* sessionId;
-@property(nonatomic, copy) NSString* appQualitySessionId;
-@property(nonatomic, copy) NSString* betaToken;
 @property(nonatomic) BOOL errorsEnabled;
 @property(nonatomic) BOOL customExceptionsEnabled;
 @property(nonatomic) BOOL machExceptionDefaultBehavior;

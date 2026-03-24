@@ -44,8 +44,4 @@ FOUNDATION_EXPORT NSString *const FIRCLSNetworkCrashlyticsOrgId;
 FOUNDATION_EXPORT NSString *const FIRCLSNetworkUserAgent;
 FOUNDATION_EXPORT NSString *const FIRCLSNetworkUTF8;
 
-NSString *FIRCLSSDKGeneratorName(void);
-
-NSString *FIRCLSSDKVersion(void);
-
 NS_ASSUME_NONNULL_END

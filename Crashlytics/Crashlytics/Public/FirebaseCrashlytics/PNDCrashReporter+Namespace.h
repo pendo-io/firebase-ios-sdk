@@ -1214,12 +1214,6 @@
 #ifndef FIRCLSSDKFileLog
 #define FIRCLSSDKFileLog __PENDO_NS_SYMBOL(FIRCLSSDKFileLog)
 #endif
-#ifndef FIRCLSSDKGeneratorName
-#define FIRCLSSDKGeneratorName __PENDO_NS_SYMBOL(FIRCLSSDKGeneratorName)
-#endif
-#ifndef FIRCLSSDKVersion
-#define FIRCLSSDKVersion __PENDO_NS_SYMBOL(FIRCLSSDKVersion)
-#endif
 #ifndef FIRCLSSettingsEndpoint
 #define FIRCLSSettingsEndpoint __PENDO_NS_SYMBOL(FIRCLSSettingsEndpoint)
 #endif

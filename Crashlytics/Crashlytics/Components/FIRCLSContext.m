@@ -50,8 +50,7 @@ static void FIRCLSContextAllocate(FIRCLSContext* context);
 
 FIRCLSContextInitData* FIRCLSContextBuildInitData(FIRCLSInternalReport* report,
                                                   FIRCLSSettings* settings,
-                                                  FIRCLSFileManager* fileManager,
-                                                  NSString* appQualitySessionId) {
+                                                  FIRCLSFileManager* fileManager) {
   // Because we need to start the crash reporter right away,
   // it starts up either with default settings, or cached settings
   // from the last time they were fetched
@@ -59,7 +58,6 @@ FIRCLSContextInitData* FIRCLSContextBuildInitData(FIRCLSInternalReport* report,
   FIRCLSContextInitData* initData = [[FIRCLSContextInitData alloc] init];
   initData.customBundleId = nil;
   initData.sessionId = [report identifier];
-  initData.appQualitySessionId = appQualitySessionId;
   initData.rootPath = [report path];
   initData.previouslyCrashedFileRootPath = [fileManager rootPath];
   initData.errorsEnabled = [settings errorReportingEnabled];
@@ -69,7 +67,6 @@ FIRCLSContextInitData* FIRCLSContextBuildInitData(FIRCLSInternalReport* report,
   initData.maxErrorLogSize = [settings errorLogBufferSize];
   initData.maxLogSize = [settings logBufferSize];
   initData.maxKeyValues = [settings maxCustomKeys];
-  initData.betaToken = @"";
 
   return initData;
 }
@@ -343,26 +340,13 @@ static const char* FIRCLSContextAppendToRoot(NSString* root, NSString* component
 }
 
 static bool FIRCLSContextRecordIdentity(FIRCLSFile* file,
-                                        const char* sessionId,
-                                        const char* betaToken,
-                                        const char* appQualitySessionId) {
+                                        const char* sessionId) {
   FIRCLSFileWriteSectionStart(file, "identity");
 
   FIRCLSFileWriteHashStart(file);
 
-  FIRCLSFileWriteHashEntryString(file, "generator", FIRCLSSDKGeneratorName().UTF8String);
-  FIRCLSFileWriteHashEntryString(file, "display_version", FIRCLSSDKVersion().UTF8String);
-  FIRCLSFileWriteHashEntryString(file, "build_version", FIRCLSSDKVersion().UTF8String);
   FIRCLSFileWriteHashEntryUint64(file, "started_at", time(NULL));
-
   FIRCLSFileWriteHashEntryString(file, "session_id", sessionId);
-  FIRCLSFileWriteHashEntryString(file, "app_quality_session_id", appQualitySessionId);
-
-  // install_id is written into the proto directly. This is only left here to
-  // support Apple Report Converter.
-  FIRCLSFileWriteHashEntryString(file, "install_id", "");
-  FIRCLSFileWriteHashEntryString(file, "beta_token", betaToken);
-  FIRCLSFileWriteHashEntryBoolean(file, "absolute_log_timestamps", true);
 
   FIRCLSFileWriteHashEnd(file);
   FIRCLSFileWriteSectionEnd(file);
@@ -393,9 +377,7 @@ static bool FIRCLSContextRecordApplication(FIRCLSFile* file, const char* customB
 
 bool FIRCLSContextRecordMetadata(NSString* rootPath, const FIRCLSContextInitData* initData) {
   const char* sessionId = [[initData sessionId] UTF8String];
-  const char* betaToken = [[initData betaToken] UTF8String];
   const char* customBundleId = [[initData customBundleId] UTF8String];
-  const char* appQualitySessionId = [[initData appQualitySessionId] UTF8String];
   const char* path =
       [[rootPath stringByAppendingPathComponent:FIRCLSReportMetadataFile] fileSystemRepresentation];
   if (!FIRCLSUnlinkIfExists(path)) {
@@ -409,7 +391,7 @@ bool FIRCLSContextRecordMetadata(NSString* rootPath, const FIRCLSContextInitData
     return false;
   }
 
-  if (!FIRCLSContextRecordIdentity(&file, sessionId, betaToken, appQualitySessionId)) {
+  if (!FIRCLSContextRecordIdentity(&file, sessionId)) {
     FIRCLSSDKLog("Unable to write out identity metadata\n");
   }
 

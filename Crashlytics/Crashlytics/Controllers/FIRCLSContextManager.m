@@ -35,8 +35,6 @@
     return self;
   }
 
-  _appQualitySessionId = @"";
-
   return self;
 }
 
@@ -53,26 +51,8 @@
   FIRCLSContextInitialize(initDataObj, self.fileManager);
 }
 
-- (void)setAppQualitySessionId:(NSString *)appQualitySessionId {
-  _appQualitySessionId = appQualitySessionId;
-
-  // This may be called before the context is originally initialized. In that case
-  // skip the write because it will be written as soon as the context is initialized.
-  // On future Session ID updates, this will be true and the context metadata will be
-  // rewritten.
-  if (!self.hasInitializedContext) {
-    return;
-  }
-
-  FIRCLSContextInitData *initDataObj = self.buildInitData;
-  if (!FIRCLSContextRecordMetadata(self.report.path, initDataObj)) {
-    FIRCLSErrorLog(@"Failed to write context file while updating App Quality Session ID");
-  }
-}
-
 - (FIRCLSContextInitData *)buildInitData {
-  return FIRCLSContextBuildInitData(self.report, self.settings, self.fileManager,
-                                    self.appQualitySessionId);
+  return FIRCLSContextBuildInitData(self.report, self.settings, self.fileManager);
 }
 
 @end

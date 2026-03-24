@@ -102,8 +102,6 @@ static FIRCrashlytics *sharedInstance = nil;
       return nil;
     }
 
-    FIRCLSDebugLog(@"Version %@", FIRCLSSDKVersion());
-
     FIRCLSDeveloperLog("PendoCrashReporter", @"Running on %@, %@ (%@)", FIRCLSHostModelInfo(),
                        FIRCLSHostOSDisplayVersion(), FIRCLSHostOSBuildVersion());
 

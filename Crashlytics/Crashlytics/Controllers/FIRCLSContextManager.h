@@ -30,10 +30,6 @@ NS_ASSUME_NONNULL_BEGIN
 ///
 @interface FIRCLSContextManager : NSObject
 
-/// This should be set immediately when the FirebaseSessions SDK generates
-/// a new Session ID.
-@property(nonatomic, copy) NSString *appQualitySessionId;
-
 - (void)setupContextWithReport:(FIRCLSInternalReport *)report
                       settings:(FIRCLSSettings *)settings
                    fileManager:(FIRCLSFileManager *)fileManager;

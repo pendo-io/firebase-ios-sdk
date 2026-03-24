@@ -85,8 +85,7 @@ void FIRCLSContextInitialize(FIRCLSContextInitData* initData,
                              FIRCLSFileManager* fileManager);
 FIRCLSContextInitData* FIRCLSContextBuildInitData(FIRCLSInternalReport* report,
                                                   FIRCLSSettings* settings,
-                                                  FIRCLSFileManager* fileManager,
-                                                  NSString* appQualitySessionId);
+                                                  FIRCLSFileManager* fileManager);
 bool FIRCLSContextRecordMetadata(NSString* rootPath, FIRCLSContextInitData* initData);
 #endif
 
