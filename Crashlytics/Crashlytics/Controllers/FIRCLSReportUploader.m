@@ -138,7 +138,7 @@
   NSArray *files = [fileManager contentsOfDirectoryAtPath:path error:nil];
   
   for (NSString *filename in files) {
-    if (![filename hasSuffix:@".clsrecord"]) {
+    if (![filename hasSuffix:@".clsrecord"] && ![filename hasSuffix:@".clsrecord.symbolicated"]) {
       continue;
     }
     
@@ -149,6 +149,10 @@
     
     NSString *fullPath = [path stringByAppendingPathComponent:filename];
     NSString *key = [filename stringByDeletingPathExtension];
+    if ([filename hasSuffix:@".clsrecord.symbolicated"]) {
+        // key is currently "exception.clsrecord", change it to "exception_symbolicated"
+        key = [[key stringByDeletingPathExtension] stringByAppendingString:@"_symbolicated"];
+    }
     
     BOOL isKVFile = [filename containsString:@"kv"];
     NSMutableDictionary *fileDict = [NSMutableDictionary dictionary];
