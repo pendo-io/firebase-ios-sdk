@@ -145,3 +145,65 @@ Example of `.clsrecord` contents:
 {"identity":{"session_id":"1234-ABCD","started_at":167888}}
 {"application":{"bundle_id":"com.pendo.example"}}
 ```
+
+---
+
+## 8. Pendo SDK Integration & Delegate Flow
+
+Unlike the original Firebase SDK which automatically uploaded the processed crash to Google's backend, our standalone fork operates via a strict delegate pattern.
+
+1. **Initialization**: The Pendo SDK (`PNDCrashReportingManager`) calls `[FIRCrashlytics startMonitoringWithDelegate:self debugMode:NO]` synchronously on the main thread during `PendoManager` setup.
+2. **Parsing**: When `FIRCLSReportUploader` finishes moving a report to the `prepared/` directory, it immediately parses the fragmented `.clsrecord` files.
+3. **Dictionary Flattening**: The engine merges the JSON-Lines and KV (Key-Value) files into a single, cohesive `NSDictionary` containing the full crash context (threads, exceptions, binary images, and custom data).
+4. **Delegate Callback**: It fires `[delegate crashReporterDidDetectCrashReport:parsedReport]` on the main thread, handing the dictionary to the Pendo SDK.
+5. **Cleanup**: Immediately after the delegate returns, the engine deletes the crash report files from the disk using `removeItemAtPath:` to prevent stale data accumulation.
+
+---
+
+## 9. Symbol Collision Prevention
+
+To ensure that an app can safely install both the **Pendo SDK** (with our crash engine) and the full **Firebase SDK** without encountering duplicate symbol linker errors, we implemented a C-preprocessor macro prefixing system.
+
+*   A master prefix header (`PNDCrashReporter+Namespace.h`) is included in the umbrella header.
+*   It uses `#define` to map every public and internal Objective-C class, struct, and constant from `FIR*` to `PND_FIR*` at compile time (e.g., `#define FIRCrashlytics PND_FIRCrashlytics`).
+*   This ensures that the symbols compiled into our library are totally isolated from any Firebase components the host app might be using.
+
+---
+
+## 10. Architecture Flow Diagram
+
+Below is a sequence diagram illustrating the complete lifecycle from initialization, to crash, to the subsequent launch where the report is processed and passed to Pendo.
+
+```mermaid
+sequenceDiagram
+    participant App as Host Application
+    participant SDK as Pendo SDK
+    participant Core as CrashReporter Engine
+    participant Disk as File System (reports/)
+    
+    Note over App, Disk: Phase 1: Setup & Monitoring
+    App->>SDK: PendoManager.shared().setup()
+    SDK->>Core: startMonitoringWithDelegate:
+    Core->>Disk: Ensure folders exist (active, processing, prepared)
+    Core->>Core: Register Mach, POSIX, NSException handlers
+    Core->>Disk: Create new session in `active/`
+    
+    Note over App, Disk: Phase 2: Crash Event
+    App-xCore: Fatal Crash (e.g., EXC_BAD_ACCESS)
+    Core->>Core: Suspend all threads
+    Core->>Core: Unwind stack & read CPU registers
+    Core->>Disk: Write async-signal-safe .clsrecord files
+    Note over Core: Process terminates naturally
+    
+    Note over App, Disk: Phase 3: Next Launch (Processing)
+    App->>SDK: PendoManager.shared().setup()
+    SDK->>Core: startMonitoringWithDelegate:
+    Core->>Disk: Find previous crash in `active/`
+    Core->>Disk: Move to `processing/`
+    Core->>Core: On-device Symbolication & Processing
+    Core->>Disk: Move to `prepared/`
+    Core->>Core: Parse .clsrecord into NSDictionary
+    Core->>SDK: crashReporterDidDetectCrashReport:
+    SDK->>SDK: Queue or Upload to Pendo Backend
+    Core->>Disk: Delete crash files (cleanUpSubmittedReport)
+```
