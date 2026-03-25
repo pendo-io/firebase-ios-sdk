@@ -89,7 +89,7 @@ void FIRCLSContextInitialize(FIRCLSContextInitData* initData,
   NSString* rootPath = initData.rootPath;
 
   // setup our SDK log file synchronously, because other calls may depend on it
-  _firclsContext.readonly->logPath = FIRCLSContextAppendToRoot(rootPath, @"sdk.log");
+  _firclsContext.readonly->logPath = FIRCLSContextAppendToRoot(rootPath, @"pnd_sdk.log");
   _firclsContext.readonly->initialReportPath = FIRCLSDupString([[initData rootPath] UTF8String]);
   if (!FIRCLSUnlinkIfExists(_firclsContext.readonly->logPath)) {
     FIRCLSErrorLog(@"Unable to write initialize SDK write paths %s", strerror(errno));

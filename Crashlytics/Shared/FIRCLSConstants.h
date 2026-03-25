@@ -25,23 +25,4 @@ FOUNDATION_EXPORT NSString *const FIRCLSMissingConsumerSecretMsg;
 // Exceptions
 FOUNDATION_EXPORT NSString *const FIRCLSException;
 
-// Endpoints
-FOUNDATION_EXPORT NSString *const FIRCLSSettingsEndpoint;
-FOUNDATION_EXPORT NSString *const FIRCLSConfigureEndpoint;
-FOUNDATION_EXPORT NSString *const FIRCLSReportsEndpoint;
-
-// Network requests
-FOUNDATION_EXPORT NSString *const FIRCLSNetworkAccept;
-FOUNDATION_EXPORT NSString *const FIRCLSNetworkAcceptCharset;
-FOUNDATION_EXPORT NSString *const FIRCLSNetworkApplicationJson;
-FOUNDATION_EXPORT NSString *const FIRCLSNetworkAcceptLanguage;
-FOUNDATION_EXPORT NSString *const FIRCLSNetworkContentLanguage;
-FOUNDATION_EXPORT NSString *const FIRCLSNetworkCrashlyticsAPIClientDisplayVersion;
-FOUNDATION_EXPORT NSString *const FIRCLSNetworkCrashlyticsAPIClientId;
-FOUNDATION_EXPORT NSString *const FIRCLSNetworkCrashlyticsDeveloperToken;
-FOUNDATION_EXPORT NSString *const FIRCLSNetworkCrashlyticsGoogleAppId;
-FOUNDATION_EXPORT NSString *const FIRCLSNetworkCrashlyticsOrgId;
-FOUNDATION_EXPORT NSString *const FIRCLSNetworkUserAgent;
-FOUNDATION_EXPORT NSString *const FIRCLSNetworkUTF8;
-
 NS_ASSUME_NONNULL_END

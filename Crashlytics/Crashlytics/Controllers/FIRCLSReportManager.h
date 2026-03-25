@@ -32,8 +32,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (BOOL)startWithProfiling;
 
-- (void)sendUnsentReports;
-- (void)deleteUnsentReports;
 
 @end
 

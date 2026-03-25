@@ -37,7 +37,7 @@
   _internalFinished = NO;
 
   _lock = [[NSRecursiveLock alloc] init];
-  _lock.name = [NSString stringWithFormat:@"com.google.firebase.crashlytics.%@-lock", [self class]];
+  _lock.name = [NSString stringWithFormat:@"pendo.crashreporter.%@-lock", [self class]];
   ;
 
   return self;

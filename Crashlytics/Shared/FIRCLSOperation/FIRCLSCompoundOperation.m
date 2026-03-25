@@ -22,13 +22,13 @@ const NSUInteger FIRCLSCompoundOperationErrorCodeCancelled = UINT_MAX - 1;
 const NSUInteger FIRCLSCompoundOperationErrorCodeSuboperationFailed = UINT_MAX - 2;
 
 NSString *const FIRCLSCompoundOperationErrorUserInfoKeyUnderlyingErrors =
-    @"com.google.firebase.crashlytics.FIRCLSCompoundOperation.error.user-info-key.underlying-"
+    @"pendo.crashreporter.FIRCLSCompoundOperation.error.user-info-key.underlying-"
     @"errors";
 
 static NSString *const FIRCLSCompoundOperationErrorDomain =
-    @"com.google.firebase.crashlytics.FIRCLSCompoundOperation.error";
+    @"pendo.crashreporter.FIRCLSCompoundOperation.error";
 static char *const FIRCLSCompoundOperationCountingQueueLabel =
-    "com.google.firebase.crashlytics.FIRCLSCompoundOperation.dispatch-queue.counting-queue";
+    "pendo.crashreporter.FIRCLSCompoundOperation.dispatch-queue.counting-queue";
 
 @interface FIRCLSCompoundOperation ()
 

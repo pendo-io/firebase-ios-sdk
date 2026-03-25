@@ -26,22 +26,3 @@ NSString* const FIRCLSMissingConsumerSecretMsg = @"consumer secret is nil or zer
 // Exceptions
 NSString* const FIRCLSException = @"FIRCLSException";
 
-// Endpoints
-NSString* const FIRCLSSettingsEndpoint = @"https://firebase-settings.crashlytics.com";
-NSString* const FIRCLSConfigureEndpoint = @"https://update.crashlytics.com";
-NSString* const FIRCLSReportsEndpoint = @"https://reports.crashlytics.com";
-
-// Network requests
-NSString* const FIRCLSNetworkAccept = @"Accept";
-NSString* const FIRCLSNetworkAcceptCharset = @"Accept-Charset";
-NSString* const FIRCLSNetworkApplicationJson = @"application/json";
-NSString* const FIRCLSNetworkAcceptLanguage = @"Accept-Language";
-NSString* const FIRCLSNetworkContentLanguage = @"Content-Language";
-NSString* const FIRCLSNetworkCrashlyticsAPIClientDisplayVersion =
-    @"X-Crashlytics-API-Client-Display-Version";
-NSString* const FIRCLSNetworkCrashlyticsAPIClientId = @"X-Crashlytics-API-Client-Id";
-NSString* const FIRCLSNetworkCrashlyticsDeveloperToken = @"X-Crashlytics-Developer-Token";
-NSString* const FIRCLSNetworkCrashlyticsGoogleAppId = @"X-Crashlytics-Google-App-Id";
-NSString* const FIRCLSNetworkCrashlyticsOrgId = @"X-Crashlytics-Org-Id";
-NSString* const FIRCLSNetworkUserAgent = @"User-Agent";
-NSString* const FIRCLSNetworkUTF8 = @"utf-8";

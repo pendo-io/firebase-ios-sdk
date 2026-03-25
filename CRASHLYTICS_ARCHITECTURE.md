@@ -20,14 +20,14 @@ The standalone Crashlytics engine operates in two distinct phases:
 The engine has been decoupled from `FirebaseCore` and `FIRApp`. Initialization is now handled via a straightforward standalone method:
 
 ```objc
-[FIRCrashlytics startWithGoogleAppID:@"YOUR_APP_ID"];
+[FIRCrashlytics startMonitoringWithDelegate:self debugMode:NO];
 ```
 
 ### What happens during initialization:
 1.  **File System Setup:** `FIRCLSFileManager` ensures the required directory structure exists (`active`, `processing`, `prepared`).
-2.  **Context Setup:** `FIRCLSContextManager` initializes the central `FIRCLSContext` (a mapped memory region holding crucial app and device state).
+2.  **Context Setup:** `FIRCLSContextManager` initializes the central `FIRCLSContext`. The `FIRCLSContext` is a pre-allocated, write-protected memory region used to safely store critical application, device, and exception state. This guarantees that during a crash, no unsafe memory allocation (`malloc`) is required.
 3.  **Phase 2 Trigger:** `FIRCLSReportManager` calls `checkAndUpdateUnsentReports` via `FIRCLSExistingReportManager` to process any crashes from a previous session.
-4.  **Crash Handlers Installation:** The SDK registers its three tiers of exception handlers (Mach, POSIX, NSException/C++).
+4.  **Crash Handlers Installation:** The SDK registers its three tiers of exception handlers (Mach, POSIX, NSException/C++) simultaneously by invoking the `FIRCLSContextInitialize` C function, which dispatches the registration blocks to background queues.
 5.  **Current Session Report Creation:** A new `.clsrecords` file is created in the `active` directory for the *current* execution.
 
 ---
@@ -53,7 +53,15 @@ The engine employs a robust, three-tiered approach to ensure no crash goes unnot
     *   **C++:** Replaces `std::set_terminate` with a custom handler.
 *   **Advantage:** Allows the SDK to capture the actual exception object, reason, and name, providing much more context than just an instruction pointer fault.
 
-> **Note on Handler Interception:** When a software exception occurs, it is recorded, and the SDK then typically allows the process to abort naturally, which then triggers the POSIX/Mach handlers. Crashlytics prevents double-recording by maintaining an atomic flag (`FIRCLSContext.crash.crashed`).
+### Exception Propagation & Preventing Double-Recording
+
+Because of how iOS/macOS handles faults, a single crash can trigger multiple handlers in a cascading manner:
+1. **Language Exceptions:** An unhandled `NSException` or C++ exception is caught by the language handler. After recording the crash, the handler typically allows the process to abort naturally (e.g., via `abort()`).
+2. **Mach Exceptions vs. POSIX Signals:** If a hardware fault (like `EXC_BAD_ACCESS`) occurs, it is first caught by the **Mach Exception** handler. If the Mach exception is unhandled or intentionally forwarded, the XNU kernel translates it into a corresponding **POSIX Signal** (like `SIGSEGV` or `SIGBUS`) and delivers it to the thread, triggering the POSIX Signal handler. Similarly, calling `abort()` triggers `SIGABRT`.
+
+To guarantee that a single crash isn't recorded multiple times (e.g., once by the NSException handler and again by the resulting `SIGABRT` signal handler), the `FIRCLSContext` maintains a strict atomic flag: `FIRCLSContext.crash.crashed`. 
+* When *any* handler intercepts a crash, it immediately attempts an atomic compare-and-swap on this flag. 
+* If the flag was already set by a previous handler in the chain, the secondary handler immediately bails out and allows the process to terminate. This ensures only the *original, most accurate* context of the crash is written to disk.
 
 ---
 
@@ -132,13 +140,13 @@ Common files written during a crash include:
 *   `mach_exception.clsrecord`: Thread states and registers for Mach-level faults.
 *   `signal.clsrecord`: Thread states and registers for POSIX signals.
 
-### The `.clsrecord` Format
+### The `.clsrecord` File Extension
 
-The `.clsrecord` format is a custom, append-only **JSON-Lines (NDJSON)** format.
+`.clsrecord` is simply a custom file extension chosen by the Crashlytics team. It does not represent a proprietary binary format. The actual content inside these files is standard text, specifically **JSON-Lines (NDJSON)**.
 
-*   **Why it exists:** Standard JSON libraries (like `NSJSONSerialization`) allocate memory (`malloc`) and use Objective-C objects, making them **unsafe** to use during a crash. Crashlytics needs to write structured data safely without triggering a secondary deadlock.
-*   **How it works:** The engine uses custom, low-level C functions (e.g., `FIRCLSFileWriteSectionStart`, `FIRCLSFileWriteHashEntryString`) which construct JSON syntax manually and write it to disk using raw `write()` system calls.
-*   **Format:** Each complete write appends a valid JSON object followed by a newline (`\n`). When reading the file on the next launch, Crashlytics simply splits the file by `\n` and parses each line using standard JSON tools. 
+*   **Why write text during a crash?** Standard JSON libraries (like `NSJSONSerialization`) allocate memory (`malloc`) and use Objective-C objects, making them **unsafe** to use during a crash. Crashlytics needs to write structured data safely without triggering a secondary deadlock.
+*   **How it works:** The engine uses custom, low-level C functions (e.g., `FIRCLSFileWriteSectionStart`, `FIRCLSFileWriteHashEntryString`) which manually format raw C-strings to look like JSON and write them to disk using raw `write()` system calls. This plain-text writing is async-signal-safe.
+*   **Phase 2 Parsing:** Because the raw text was written using valid JSON syntax, when the app restarts (Phase 2), Crashlytics can simply read the text file, split it by `\n`, and hand each line directly to Apple's highly optimized `NSJSONSerialization` to reconstruct the complex dictionary hierarchies.
 
 Example of `.clsrecord` contents:
 ```json
